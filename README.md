@@ -45,6 +45,12 @@ Everybody needs:
 
 ## Labs
 
+* [01. Financial Backend Service](docs/lab01.md#lab-01) - Building Blocks on Fuse Online
+* [02. Service Management](docs/lab02.md#lab-02) - Configuration and Integration in 3scale
+* [03. Developer Portal](docs/lab03.md#lab-03) - Basics of Content Publishing
+* [04. API Authentication](docs/lab04.md#lab-04) - OpenID Connect with Red Hat Single Sign On and 3scale
+* [05. Container Management](docs/lab05.md#lab-05) - OpenShift 10,000 Feet View
+
 ### Slides
 
 Check the latest [Slides](slideslink) for delivering this workshop.
@@ -63,8 +69,8 @@ Having any trouble while doing the labs? Check this [troubleshooting](docs/troub
 
 GitHub Repo: [https://github.com/jbossdemocentral/openbanking-workshop](https://github.com/jbossdemocentral/openbanking-workshop)
 
-Feel free to ask [Hugo Guerrero](mailto:hguerrero@redhat.com) or [Luca Ferrari](mailto:lferrari@redhat.com) if you need some support when there are any questions left or if you need some support.
+Feel free to ask [Luca Ferrari](mailto:lferrari@redhat.com) or [Hugo Guerrero](mailto:hguerrero@redhat.com) if you need some support when there are any questions left or if you need some support.
 
 ### Contributing
 
-We welcome all forms of contribution (content, issues/bugs, feedback). Please see the [Contribution Guidelines](docs/contributing.md#guides-for-contributing) for ways to help
+We welcome all forms of contribution (content, issues/bugs, feedback). Please see the [Contribution Guidelines](docs/contributing.md#guidelines-for-contributing) for ways to help
