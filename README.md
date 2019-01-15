@@ -4,7 +4,7 @@
 
 This is a workshop designed for approximately 2 hours delivery. The focus is on the adoption of the products in the financial industry. This is not an introduction to the different products used in the environment, but it is focused on the modules and functionalities relevant for the FSI case. 
 
-###Products and Projects
+### Products and Projects
 
 * [Red Hat OpenShift Container Platform](https://www.redhat.com/en/technologies/cloud-computing/openshift)
 * [Red Hat 3scale API Management](https://www.redhat.com/en/technologies/jboss-middleware/3scale)
@@ -53,11 +53,11 @@ Check the latest [Slides](slideslink) for delivering this workshop.
 
 ### Installation
 
-If you feel comfortable, you can setup your own environment to host the software required in the labs. Follow the [install instructions](docs/install#installation) to install and configure the environment.
+If you feel comfortable, you can setup your own environment to host the software required in the labs. Follow the [install instructions](docs/install.md#installation) to install and configure the environment.
 
 ### FAQ
 
-Having any trouble while doing the labs? Check this [troubleshooting](docs/troubleshooting#troubleshooting) guide to check for answers for most common problems.
+Having any trouble while doing the labs? Check this [troubleshooting](docs/troubleshooting.md#troubleshooting) guide to check for answers for most common problems.
 
 ### Support & Ownership
 
@@ -67,4 +67,4 @@ Feel free to ask [Hugo Guerrero](mailto:hguerrero@redhat.com) or [Luca Ferrari](
 
 ### Contributing
 
-We welcome all forms of contribution (content, issues/bugs, feedback). Please see the [Contribution Guidelines](docs/contributing#guides-for-contributing) for ways to help
+We welcome all forms of contribution (content, issues/bugs, feedback). Please see the [Contribution Guidelines](docs/contributing.md#guides-for-contributing) for ways to help
