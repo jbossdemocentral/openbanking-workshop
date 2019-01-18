@@ -1,0 +1,88 @@
+---
+- name: "Get master config"
+  hosts: master
+  gather_facts: no
+  tasks:
+  - include_role:
+      name: master_config
+
+- name: "Install API Workshop"
+  hosts: workshop
+  tasks:
+    - include_role:
+        name: provision_sso
+      vars:
+        eval_rhsso_admin_username: "{{ hostvars['SHARED_VARS']['rhsso_admin_username'] }}"
+        eval_rhsso_admin_password: "{{ hostvars['SHARED_VARS']['rhsso_admin_password'] }}"
+        ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"        
+        configure_only: "true"
+        sso_project: "sso"
+      tags: sso
+    - include_role:
+        name: provision_microcks
+      vars:
+        eval_rhsso_admin_username: "{{ hostvars['SHARED_VARS']['rhsso_admin_username'] }}"
+        eval_rhsso_admin_password: "{{ hostvars['SHARED_VARS']['rhsso_admin_password'] }}"
+        ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+      tags: microcks
+    # - include_role:
+    #     name: setup_che_multi
+    #   vars:
+    #     item: che
+    #     eval_rhsso_admin_username: "{{ hostvars['SHARED_VARS']['rhsso_admin_username'] }}"
+    #     eval_rhsso_admin_password: "{{ hostvars['SHARED_VARS']['rhsso_admin_password'] }}"
+    #     ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+    #     openshift_oauth_token: ""
+    #   tags: che
+    # - include_role:
+    #     name: provision_gogs
+    #   vars:   
+    #     ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+    #     configure_only: "false"
+    #   tags: gogs
+    - include_role:
+        name: provision_threescale
+      vars:
+        configure_only: "true"
+        eval_rhsso_admin_username: "{{ hostvars['SHARED_VARS']['rhsso_admin_username'] }}"
+        eval_rhsso_admin_password: "{{ hostvars['SHARED_VARS']['rhsso_admin_password'] }}"
+        ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+        threescale_master_access_token: "{{ hostvars['SHARED_VARS']['threescale_master_token'] }}"
+        threescale_admin_access_token: "{{ hostvars['SHARED_VARS']['threescale_admin_token'] }}"
+        sso_project: sso
+        threescale_realm: "threescale"
+        threescale_client_id: "3scale-admin"
+        namespace: 3scale
+        no_threescale_services: "false"
+        wildcard_route_name: apicast-wildcard-router-route
+      tags: threescale
+    # - include_role:
+    #     name: provision_apicurio
+    #   vars:
+    #     ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+    #     sso_project: sso
+    #     apicurio_template_params: -p API_STUDIO_API_IMAGE_TAG=0.2.17.Final -p API_STUDIO_WS_IMAGE_TAG=0.2.17.Final -p API_STUDIO_UI_IMAGE_TAG=0.2.17.Final
+    #     apicurio_template_url: https://gist.githubusercontent.com/aidenkeating/e14b8150118c6fc2d446ad2644a38d97/raw/2fe99d4b91e7c2d424fc413ca348383a4a378a5b/apicurio-template.yml
+    #     eval_rhsso_admin_username: "{{ hostvars['SHARED_VARS']['rhsso_admin_username'] }}"
+    #     eval_rhsso_admin_password: "{{ hostvars['SHARED_VARS']['rhsso_admin_password'] }}"
+    #   tags: apicurio
+    # - include_role:
+    #     name: provision_backend
+    #   vars:
+    #     ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+    #     sso_project: sso
+    #   tags: backend
+    - include_role:
+        name: setup_webapp
+      vars:
+        configmap_name: extra-services
+        configmap_namespace: webapp
+        ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+      tags: webapp
+    - include_role:
+        name: user_projects
+      with_sequence: start=1 end={{ usersno }} format=%d
+      vars:
+        sso_project: sso
+        ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+      tags: user_projects
