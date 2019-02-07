@@ -1,81 +1,76 @@
+:apitester-url: https://apitester.com/
+
 = Lab 01 - Financial Backend Services
 
 This first session will take us to the creation of a simple REST service from a database source.
 
 This is quite a common scenario and one that goes well for quick prototyping service scenarios.
 
-== Environment:
+[type=walkthroughResource,serviceName=fuse]
+.Fuse Online
+****
+* link:{fuse-url}[Console, window="_blank"]
+****
 
-Environment reachable here:
- https://tutorial-web-app-webapp.apps.openbanking-fe8e.openshiftworkshop.com
+// [type=walkthroughResource,serviceName=apitester]
+// .API Tester
+// ****
+// * link:{apitester-url}[API Tester, window="_blank"]
+// ****
 
-End Users credentials:
-user[1..100] / openshift
+[type=walkthroughResource,serviceName=openshift]
+.Red Hat OpenShift
+****
+* link:{openshift-host}/console[Console, window="_blank"]
+****
 
-3scale dedicated instances here [X is your user id]:
-https://userX-admin.apps.openbanking-fe8e.openshiftworkshop.com
+== Database connection
 
-access using username and password above
-dedicated gateway
-https://userX.amp.apps.openbanking-fe8e.openshiftworkshop.com
+Let’s start by creating the connection to an existing DB that I previously created. It is a data store built on PostgreSQL and hosted on ElephantSQL. You could be running this anywhere else, as long as you have a direct connection to the DB to use.
 
-== Let’s start opening data now!
-
-Let’s start by creating the connection to an existing DB that I previously created. It is a data store built on PostgreSQL and hosted on ElephantSQL. You could be running this anywhere else, as long as you have a public direct connection to the DB to use.
-
-=== Database connection
-
-<1> Open a new browser tab and navigate to {fuse-url}
-<1> Go to Connections -> Create connection
-<1> Select Database connector
-<1> Use the following connection details and validate them:
+. Open a new browser tab and navigate to link:{fuse-url}[Fuse Online Console, window="_blank"]
+. Go to Connections -> Create connection
+. Select Database connector
+. Use the following connection details and validate them:
 Connection details: jdbc:postgresql://manny.db.elephantsql.com:5432/hxuazyrm
 username: hxuazyrm
 password: eiHvH6xbZ2_DRdeoAu_tLbNe3des_NUf
 schema: hxuazyrm
-<1> Let’s name the connection and finalize the configuration of the connector (Create).
-7
-We can now use this connection as an integration starting, middle or finishing point.
-Now that we have configured the end of the integration path we want to build and we will see
-where to find the start and we will put the two pieces together. Integrations -> create
-integration
-We will start by exposing a REST endpoint that will then get mapped to the backend
-datasource.
-Use the API Provider connector with the following OpenAPI file:
+. Let’s name the connection and finalize the configuration of the connector (Create).
+. We can now use this connection as an integration starting, middle or finishing point.
+. Now that we have configured the end of the integration path we want to build and we will see where to find the start and we will put the two pieces together. 
+
+== Creating Integrations
+
+We will start by exposing a REST endpoint that will then get mapped to the backend datasource.
+
+. Use the API Provider connector with the following OpenAPI file:
 https://raw.githubusercontent.com/lucamaf/open-banking-roadshow/master/open-dataapis-nokey.json
-8
-The definition is the same one seen on the Open Banking solution portal for Open Data APIs.
-There is a validation happening on the API definition, but no error was identified so we can
-proceed with the configuration of the connector.
-To show how easy it is to correct definitions -> review/edit
-This opens a window on Apicurito which is a scaled down version of Apicurio, our API Design
-platform. It is fairly easy to change elements graphically and also with the help of this tool an
-API team can start with a Design First approach when configuring the API. Also the same team
-doesn’t need to know about the rules around OpenAPI specifications thanks to this tool.
-The service is exposed without any protection (that’s one of the reasons we are going to be
-using 3scale later on) since the API definition is not adding any authentication on top of it by
-default.
-Name the integration.
-9
-And save and continue
-We are going to map just one of the endpoint exposed, in particular the get banks (/banks) one.
-Click on get list of banks
-10
+. The definition is the same one seen on the Open Banking solution portal for Open Data APIs.
+. There is a validation happening on the API definition, but no error was identified so we can proceed with the configuration of the connector.
+. To show how easy it is to correct definitions -> review/edit
+. This opens a window on Apicurito which is a scaled down version of Apicurio, our API Design platform. It is fairly easy to change elements graphically and also with the help of this tool an API team can start with a Design First approach when configuring the API. Also the same team doesn’t need to know about the rules around OpenAPI specifications thanks to this tool.
+. The service is exposed without any protection (that’s one of the reasons we are going to be using 3scale later on) since the API definition is not adding any authentication on top of it by default.
+. Name the integration.
+. And save and continue
+. We are going to map just one of the endpoint exposed, in particular the get banks (/banks) one.
+. Click on get list of banks
+
+=== Add a connection
+
 We now have a dumb pipe which connects an endpoint to receive user requests and return
 always 200 (all OK) - the return blue arrow symbol. Not very useful integration but a starter!
+
 Let’s connect this front end to the database we previously configured as a terminating
 connection.
-Add a connection
-Click on the previously configured data source.
-11
-And we will invoke a simple SQL statement to return the data from a single table.
-The simple statement to introduce is:
+
+. Click on the previously configured data source.
+. And we will invoke a simple SQL statement to return the data from a single table. The simple statement to introduce is:
 select * from banks
-When you click done the statement will validate and you should be able to proceed with the
-configuration of the integration.
-12
-And now let’s add a simple log of the requests coming through. Add a step.
-Select the log step.
+When you click done the statement will validate and you should be able to proceed with the configuration of the integration.
+. And now let’s add a simple log of the requests coming through. 
+. Add a step.
+. Select the log step.
 We are going to be sending a copy of the responses coming through to the integration log.
 13
 We are going to log just the message body.
