@@ -2,7 +2,6 @@ DROP TABLE IF EXISTS "banks";
 
 CREATE TABLE "banks" (
   id SERIAL PRIMARY KEY,
-  id integer NULL,
   short_name varchar(11) default NULL,
   long_name varchar(255),
   address varchar(255) default NULL
