@@ -26,7 +26,7 @@ The recommended way to install the workshop is running the ansible playbook from
 
 1. Login to the bastion machine following the email instructions.
 
-    ```bash
+    ```
     ssh -i /path/to/ocp_workshop.pem ec2-user@bastion.GUID.openshiftworkshop.com
     ```
 
@@ -34,25 +34,25 @@ The recommended way to install the workshop is running the ansible playbook from
 
 1. Git Clone the Integr8ly installation repository.
 
-    ```bash
+    ```
     git clone -b release-1.1.0 https://github.com/integr8ly/installation.git
     ```
 
 1. Change folder to installation base.
 
-    ```Bash
+    ```
     cd installation/evals/
     ```
-    
+
 1. Edit the default inventory according to your environment *GUID*.
 
-    ```Bash
+    ```
     vi inventories/hosts.template
     ```
-    
+
 1. Replace `127.0.0.1` under `[master]` with `master1.GUID.internal` where *GUID* is your environment identifier.
 
-    ```yaml
+    ```
     [local:vars]
     ansible_connection=local
     
@@ -71,13 +71,13 @@ The recommended way to install the workshop is running the ansible playbook from
 
 1. Become super user running the following command.
 
-    ```bash
+    ```
     sudo su
     ```
 
 1. Run the Ansible playbook. Replace `eval_seed_users_count=101` with the actual number of users you want to create for the workshop.
 
-    ```bash
+    ```
     ansible-playbook -i inventories/hosts.template playbooks/install.yml -e eval_seed_users_count=101 -e rhsso_seed_users_name_format=user%d -e rhsso_seed_users_password=openshift
     ```
 
@@ -89,37 +89,37 @@ After you install integr8ly, is now time to install and configure the workshop e
 
 1. If you are still in the same session exit the root user.
 
-    ```Bash
+    ```
     exit
     ```
 
 1. Get back to the user home.
 
-    ```bash
+    ```
     cd
     ```
-    
+
 1. Clone the Open Banking Workshop.
 
-    ```bash
+    ```
     git clone https://github.com/jbossdemocentral/openbanking-workshop.git
     ```
-    
+
 1. Change folder to the support install directory.
 
-    ```bash
+    ```
     cd openbanking-workshop/support/install/ansible/
     ```
-    
+
 1. Edit the inventory with the correct environment hostnames.
 
-    ```bash
+    ```
     vi inventory/integreatly.example
     ```
 
 1. Replace `master.akeating.openshiftworkshop.com` under `[master]` with `master1.GUID.internal` where *GUID* is your environment identifier. Replace the `ocp_domain` and the `ocp_apps_domain` with your environment *GUID*. 
 
-    ```yaml
+    ```
     ...
     
     [master]
@@ -135,7 +135,7 @@ After you install integr8ly, is now time to install and configure the workshop e
     backend_project=international
     configure_only=false
     ocp_domain=GUID.openshiftworkshop.com
-ocp_apps_domain=apps.GUID.openshiftworkshop.com
+    ocp_apps_domain=apps.GUID.openshiftworkshop.com
     usersno=101
     che=false
     
@@ -145,12 +145,12 @@ ocp_apps_domain=apps.GUID.openshiftworkshop.com
 
 1. Become super user running the following command.
 
-    ```bash
+    ```
     sudo su
     ```
 
 1. Run the Ansible playbook.
 
-    ```bash
+    ```
     ansible-playbook -i inventory/integreatly.example playbooks/openshift/integreatly-install.yml
     ```
