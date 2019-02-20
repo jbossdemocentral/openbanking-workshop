@@ -29,6 +29,14 @@
   -p SSO_ADMIN_PASSWORD=keypassword -n {{sso_project}}"
   when: configure_only == 'false'
 
+- name: Create HTTP SSO service
+  shell: "oc create -f https://raw.githubusercontent.com/jbossdemocentral/openbanking-workshop/master/support/templates/sso-http-service.yml -n {{ sso_project }}"
+  when: configure_only == 'false'
+
+- name: Create HTTP SSO route
+  shell: "oc expose service sso-http --name=http --hostname=sso.{{ocp_apps_domain}} -n {{ sso_project }}"
+  when: configure_only == 'false'
+
 - name: Wait until RH SSO API is available 
   uri: 
     url: https://sso-{{sso_project}}.{{ocp_apps_domain}}
