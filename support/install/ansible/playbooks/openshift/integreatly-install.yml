@@ -73,6 +73,11 @@
     #     sso_project: sso
     #   tags: backend
     - include_role:
+        name: provision_shared
+      vars:
+        ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
+      tags: shared
+    - include_role:
         name: setup_webapp
       vars:
         configmap_name: extra-services

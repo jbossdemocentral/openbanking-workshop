@@ -1,0 +1,26 @@
+---
+- name: Create shared services
+  shell: "oc new-app postgresql-persistent --param POSTGRESQL_USER=dbuser --param POSTGRESQL_PASSWORD=password -n {{ shared_project }}"
+  when: configure_only == 'false'
+
+- name: Wait for db to start
+  shell: "oc get dc/postgresql -o jsonpath='{.status.replicas}' -n {{ shared_project }}"
+  failed_when: false
+  until: postgresql_replicas.stdout | int > 0
+  retries: 60
+  delay: 5
+  register: postgresql_replicas
+
+- name: Wait for postgresql readiness
+  shell: "oc get dc/postgresql -o jsonpath='{.status.readyReplicas}' -n {{ shared_project }}"
+  until: postgresql_available_replicas.stdout == postgresql_replicas.stdout
+  ignore_errors: yes
+  retries: 60
+  delay: 5
+  register: postgresql_available_replicas
+
+- name: Load data into db
+  shell: "oc exec `oc get pod -o jsonpath='{.items[0].metadata.name}' -n {{ shared_project }}` -- /bin/bash -c 'curl https://raw.githubusercontent.com/jbossdemocentral/openbanking-workshop/master/support/templates/banks.sql -s  | psql sampledb --username dbuser'"
+  register: output
+
+- debug: var=output

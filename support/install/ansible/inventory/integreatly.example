@@ -24,6 +24,7 @@ sso_project=sso
 gogs_project=gogs
 microcks_project=microcks
 apicurio_project=apicurio
+shared_project=shared
 namespace=threescale
 backend_project=international
 configure_only=false
