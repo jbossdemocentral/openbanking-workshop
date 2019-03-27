@@ -117,7 +117,7 @@ After you install integr8ly, is now time to install and configure the workshop e
     vi inventory/integreatly.example
     ```
 
-1. Replace `master.akeating.openshiftworkshop.com` under `[master]` with `master1.GUID.internal` where *GUID* is your environment identifier. Replace the `ocp_domain` and the `ocp_apps_domain` with your environment *GUID*. 
+1. Replace `master.akeating.openshiftworkshop.com` under `[master]` with `master1.GUID.internal` where *GUID* is your environment identifier. Replace the `ocp_domain` and the `ocp_apps_domain` with your environment *GUID*. Also make sure the `userno` aligns with the number of users you provisioned originally in the OCP workshop.
 
     ```
     ...
