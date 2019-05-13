@@ -6,7 +6,7 @@
   - include_role:
       name: master_config
 
-- name: "Install API Workshop"
+- name: "Install Open Banking Workshop"
   hosts: workshop
   tasks:
     - include_role:
