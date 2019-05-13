@@ -1,0 +1,318 @@
+{
+    "swagger" : "2.0",
+    "info" : {
+      "title" : "open-data-apis",
+      "description" : "Open Banking open data apis",
+      "contact" : {
+        "name" : "Luca Ferrari",
+        "email" : "luferrar+psd2@redhat.com"
+      },
+      "license" : {
+        "name" : "GNU GPLv3",
+        "url" : "https://www.gnu.org/licenses/gpl.txt"
+      },
+      "version" : "1.0.0"
+    },
+    "host": "open-data.b9ad.pro-us-east-1.openshiftapps.com",
+    "basePath": "/open-data",
+    "schemes": [
+      "https"
+    ],
+    "consumes" : [ "application/json" ],
+    "produces" : [ "application/json" ],
+    "paths" : {
+      "/banks/{bank_id}/branches" : {
+        "get" : {
+          "description" : "get branches available by a specific bank",
+          "responses" : {
+            "200" : {
+              "description" : "list of branches",
+              "schema" : {
+                "type" : "string"
+              },
+              "examples" : {
+                "application/json" : {
+                  "atms" : [ {
+                    "id" : "1f5a-964",
+                    "bank_id" : "at02-0182--01",
+                    "name" : "OFICINA-964",
+                    "address" : {
+                      "line_1" : "Victor De La Serna, 32",
+                      "line_2" : "NA",
+                      "line_3" : "NA",
+                      "city" : "MADRID",
+                      "county" : "CHANMARTIN",
+                      "state" : "MADRID",
+                      "postcode" : "28016",
+                      "country_code" : "ES"
+                    },
+                    "location" : {
+                      "latitude" : 40455451,
+                      "longitude" : -3670617
+                    },
+                    "meta" : {
+                      "license" : {
+                        "id" : "copyrightENBDG2016",
+                        "name" : "Copyright 2016 ENBDG"
+                      }
+                    },
+                    "monday" : { },
+                    "tuesday" : { },
+                    "wednesday" : { },
+                    "thursday" : { },
+                    "friday" : { },
+                    "saturday" : { },
+                    "sunday" : { },
+                    "is_accessible" : "",
+                    "has_deposit_capability" : ""
+                  }, {
+                    "id" : "3103-4922",
+                    "bank_id" : "at02-0182--01",
+                    "name" : "OFICINA-4922",
+                    "address" : {
+                      "line_1" : "Alberto Alcocer,48",
+                      "line_2" : "NA",
+                      "line_3" : "NA",
+                      "city" : "MADRID",
+                      "county" : "CHANMARTIN",
+                      "state" : "MADRID",
+                      "postcode" : "28016",
+                      "country_code" : "ES"
+                    },
+                    "location" : {
+                      "latitude" : 40458424,
+                      "longitude" : -3678969
+                    },
+                    "meta" : {
+                      "license" : {
+                        "id" : "copyrightENBDG2016",
+                        "name" : "Copyright 2016 ENBDG"
+                      }
+                    },
+                    "monday" : { },
+                    "tuesday" : { },
+                    "wednesday" : { },
+                    "thursday" : { },
+                    "friday" : { },
+                    "saturday" : { },
+                    "sunday" : { },
+                    "is_accessible" : "",
+                    "has_deposit_capability" : ""
+                  }, {
+                    "id" : "95a0-2241",
+                    "bank_id" : "at02-0182--01",
+                    "name" : "OFICINA-2241",
+                    "address" : {
+                      "line_1" : "Avenida Pio XII, 6 ",
+                      "line_2" : "NA",
+                      "line_3" : "NA",
+                      "city" : "MADRID",
+                      "county" : "CHANMARTIN",
+                      "state" : "MADRID",
+                      "postcode" : "28016",
+                      "country_code" : "ES"
+                    },
+                    "location" : {
+                      "latitude" : 40464105,
+                      "longitude" : -3675513
+                    },
+                    "meta" : {
+                      "license" : {
+                        "id" : "copyrightENBDG2016",
+                        "name" : "Copyright 2016 ENBDG"
+                      }
+                    },
+                    "monday" : { },
+                    "tuesday" : { },
+                    "wednesday" : { },
+                    "thursday" : { },
+                    "friday" : { },
+                    "saturday" : { },
+                    "sunday" : { },
+                    "is_accessible" : "",
+                    "has_deposit_capability" : ""
+                  }, {
+                    "id" : "c0c2-4015",
+                    "bank_id" : "at02-0182--01",
+                    "name" : "OFICINA-4015",
+                    "address" : {
+                      "line_1" : "Principe De Vergara, 267",
+                      "line_2" : "NA",
+                      "line_3" : "NA",
+                      "city" : "MADRID",
+                      "county" : "CHANMARTIN",
+                      "state" : "MADRID",
+                      "postcode" : "28016",
+                      "country_code" : "ES"
+                    },
+                    "location" : {
+                      "latitude" : 40457394,
+                      "longitude" : -3677183
+                    },
+                    "meta" : {
+                      "license" : {
+                        "id" : "copyrightENBDG2016",
+                        "name" : "Copyright 2016 ENBDG"
+                      }
+                    },
+                    "monday" : { },
+                    "tuesday" : { },
+                    "wednesday" : { },
+                    "thursday" : { },
+                    "friday" : { },
+                    "saturday" : { },
+                    "sunday" : { },
+                    "is_accessible" : "",
+                    "has_deposit_capability" : ""
+                  } ]
+                }
+              }
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      },
+      "/banks/{bank_id}/atms/{atm_id}" : {
+        "get" : {
+          "description" : "get atm info",
+          "responses" : {
+            "200" : {
+              "description" : "get atm info given atm and bank id"
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "atm_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      },
+      "/banks" : {
+        "get" : {
+          "description" : "get list of banks",
+          "responses" : {
+            "200" : {
+              "description" : "get list of available banks"
+            }
+          }
+        }
+      },
+      "/banks/{bank_id}" : {
+        "get" : {
+          "description" : "get bank details",
+          "responses" : {
+            "200" : {
+              "description" : "list of bank details given the bank id"
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      },
+      "/banks/{bank_id}/atms" : {
+        "get" : {
+          "description" : "get bank atms",
+          "responses" : {
+            "200" : {
+              "description" : "get list of atms given bank id"
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      },
+      "/banks/{bank_id}/branches/{branch_id}" : {
+        "get" : {
+          "description" : "get branch info",
+          "responses" : {
+            "200" : {
+              "description" : "returns branch info given branch and bank id"
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "branch_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      },
+      "/banks/{bank_id}/products" : {
+        "get" : {
+          "description" : "get products",
+          "responses" : {
+            "200" : {
+              "description" : "get products available in a given bank"
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      },
+      "/banks/{bank_id}/products/{product_id}" : {
+        "get" : {
+          "description" : "get product info",
+          "responses" : {
+            "200" : {
+              "description" : "get product info given a bank and product id"
+            }
+          }
+        },
+        "parameters" : [ {
+          "name" : "bank_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "product_id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ]
+      }
+    },
+    "tags" : [ {
+      "name" : "PSD2",
+      "description" : ""
+    }, {
+      "name" : "Open Banking",
+      "description" : ""
+    }, {
+      "name" : "Branch",
+      "description" : ""
+    }, {
+      "name" : "ATM",
+      "description" : ""
+    }, {
+      "name" : "Product",
+      "description" : ""
+    } ]
+  }
