@@ -1,0 +1,166 @@
+:apitester-url: https://apitester.com/
+
+= Lab 01 - Financial Backend Services
+
+This first session will take us to the creation of a simple REST service from a database source.
+
+This is quite a common scenario and one that goes well for quick prototyping service scenarios.
+
+// [type=walkthroughResource,serviceName=fuse]
+// .Fuse Online
+// ****
+// * link:{fuse-url}[Console, window="_blank"]
+// ****
+
+// [type=walkthroughResource,serviceName=openshift]
+// .Red Hat OpenShift
+// ****
+// ****
+
+// [type=walkthroughResource]
+// .API Tester
+// ****
+// * link:{apitester-url}[API Tester, window="_blank"]
+// ****
+
+[time=15]
+[id='database-connection']
+== Database connection
+
+[type=taskResource,serviceName=fuse]
+.Fuse Online
+****
+* link:{fuse-url}[Console, window="_blank"]
+****
+
+Let’s start by creating the connection to an existing DB part of our existing infrastructure. It is a data store built on PostgreSQL and (for this lab) hosted on OpenShift. You could be running this anywhere else, as long as you have a direct connection to the DB to use.
+
+. Open a new browser tab and navigate to link:{fuse-url}[Fuse Online Console, window="_blank"]. When open for the first time, the application will request your to __Authorize Access__ for you account. Click on *Allow selected permissions*.
++
+image::images/lab1-100.png[lab1-100, role="integr8ly-img-responsive"]
+. In the main page click on *Create connection*
++
+image::images/lab1-101.png[lab1-101, role="integr8ly-img-responsive"]
+. Select *Database* connector
++
+image::images/lab1-102.png[lab1-102, role="integr8ly-img-responsive"]
+. Fill up the connection details with the following information and click on **Validate**
++
+ Connection URL: jdbc:postgresql://postgresql.shared.svc:5432/sampledb
+ Username: dbuser
+ Password: password
++
+image::images/lab1-103.png[lab1-103, role="integr8ly-img-responsive"]
+. Click on the **Next >** button.
++
+image::images/lab1-104.png[lab1-104, role="integr8ly-img-responsive"]
+. Let’s name the connection `open-data-bank` and finalize the configuration of the connector by clicking **Create**.
++
+image::images/lab1-105.png[lab1-105, role="integr8ly-img-responsive"]
+
+We can now use this connection as an integration starting, middle or finishing point.
+
+image::images/lab1-106.png[lab1-106, role="integr8ly-img-responsive"]
+
+Now that we have configured the end of the integration path we want to build and we will see where to find the start and we will put the two pieces together.
+
+[time=10]
+[id='api-specifications']
+== Adding API Specifications
+
+We will start by exposing a REST endpoint that will then get mapped to the backend datasource connection we just created in the previous step.
+
+. Click on **Integrations** in the left side menu.
++
+image::images/lab1-200.png[lab1-200, role="integr8ly-img-responsive"]
+. Then click on **Create Integration**.
++
+image::images/lab1-201.png[lab1-201, role="integr8ly-img-responsive"]
+
+When we already have an Open API Specification designed by the Business team or as part of the provided regulation we can use it as the starting point for our implementation.
+
+. Click on the **API Provider** starting connection.
++
+image::images/lab1-202.png[lab1-202, role="integr8ly-img-responsive"]
+. Select the **Use a URL** option and paste in the text box the following OpenAPI URL, then click **Next**.
++
+ https://raw.githubusercontent.com/jbossdemocentral/openbanking-workshop/master/support/open-data-apis-nokey.json
++
+image::images/lab1-203.png[lab1-203, role="integr8ly-img-responsive"]
++
+The definition is the same one seen on the Open Banking solution portal for Open Data APIs.
++
+. There is a validation happening on the API definition, but no error was identified. To see how easy it is to correct definitions click on **Review/Edit**.
++
+image::images/lab1-204.png[lab1-204, role="integr8ly-img-responsive"]
+. This will open the API design tooling __Apicurito__ which is a scaled down version of __Apicurio__, our API Design platform. It is fairly easy to change elements graphically and also with the help of this tool an API team can start with a Design First approach when configuring the API. Also the same team doesn’t need to know about the rules around OpenAPI specifications thanks to this tool.
++
+image::images/lab1-205.png[lab1-205, role="integr8ly-img-responsive"]
+. Click on **Cancel** to get back to the integration design.
++
+image::images/lab1-206.png[lab1-206, role="integr8ly-img-responsive"]
+. Click on **Yes** when asking if you want to exit the editor.
++
+image::images/lab1-207.png[lab1-207, role="integr8ly-img-responsive"]
+. Back to the __Review Actions__ page click on **Next**.
++
+image::images/lab1-208.png[lab1-208, role="integr8ly-img-responsive"]
+. Name the integration `Open Bank Data`. Finally click **Save and continue**.
++
+image::images/lab1-209.png[lab1-209, role="integr8ly-img-responsive"]
+
+[time=10]
+[id='api-implementation']
+== Add API Implementation
+
+Our API definition includes several operations. However, in this lab we are going to map just one of the endpoint exposed, the get banks (`/banks`) one.
+
+The first thing to do is create a dumb pipe which connects an endpoint to receive user requests and return always `HTTP 200` (all OK) as by default every operation returns `HTTP 501 Not Implemented`. 
+
+Let’s connect this front end to the database we previously configured as a terminating connection.
+
+. Click on **get list of banks** operation.
++
+image::images/lab1-300.png[lab1-300, role="integr8ly-img-responsive"]
+. Click on the **Add a Connection** button.
++
+image::images/lab1-301.png[lab1-301, role="integr8ly-img-responsive"]
+. Select the previously configured data source `open-data-bank` by clicking on it.
++
+image::images/lab1-302.png[lab1-302, role="integr8ly-img-responsive"]
+. Click on the **Invoke SQL** option to configure an SQL statement to be invoked on the datasource.
++
+image::images/lab1-303.png[lab1-303, role="integr8ly-img-responsive"]
+. Enter the following SQL statement:
++
+ select * from banks
++
+Then, click on **Done** so the statement will be validated and you should be able to proceed.
++
+image::images/lab1-304.png[lab1-304, role="integr8ly-img-responsive"]
+. And now let’s add a simple log of the requests coming through. Mouse the mouse over the **+** symbol below the database icon on the left side of the screen so the popup menu shows up and click on **Add a step**.
++
+image::images/lab1-305.png[lab1-305, role="integr8ly-img-responsive"]
+. We are going to be sending a copy of the responses coming through to the integration log. Click on the **Log** step.
++
+image::images/lab1-306.png[lab1-306, role="integr8ly-img-responsive"]
+. We are going to log just the message body. Check the **Message Body** checkbox. Then click on **Done**.
++
+image::images/lab1-307.png[lab1-307, role="integr8ly-img-responsive"]
+. We are now ready to deploy and expose this integration in our platform, to use it. Click **Publish**.
++
+image::images/lab1-308.png[lab1-308, role="integr8ly-img-responsive"]
+
+You can check the progress in building the integration changing through phases. We can notice the platform is getting the required components and constructing the block. When the building is completed we can test the Integration block.
+
+image::images/lab1-309.png[lab1-309, role="integr8ly-img-responsive"]
+
+ SINCE AUTO DISCOVERY FEATURE IS ACTIVE WE WILL NOT GET AUTOMATICALLY A URL WITH THE INTEGRATION BUILDING PROCESS, BUT API MANAGEMENT WILL BE ABLE TO SEE IT AND EXPOSE IT ANYWAYS
+
+[type=verification]
+****
+Is your result similar to the image?
+****
+
+[type=verificationFail]
+Verify that you followed each step in the procedure above.  If you are still having issues, contact your session facilitator.

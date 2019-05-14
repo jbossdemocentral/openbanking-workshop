@@ -1,0 +1,325 @@
+= Template Walkthrough
+
+// This is a template meant to be used as a starting point for walkthrough development
+
+[time=5]
+== Task
+
+// Add your own task here
+
+=== Step
+
+// Add steps to your task
+
+.
+3scale
+To reach 3scale as a user you can just go back to the main integr8ly tutorial dashboard and
+click on 3scale. You will be presented with the login window and can use you previously used
+user credentials.
+Introducing now 3scale, for the purpose of managing these exposed APIs, securing them and
+tracking their usage. Dashboard
+Everybody when logging in act as an administrator or API provider. The dashboard will show a
+summary of the trends in usage of the platform, in terms of developers signups, usage of APIs
+and message sent and received.
+16
+Let’s start managing and protecting the API we just created on Fuse Online.
+Click on the green button New API and select Import from OpenShift (click on Authenticate to
+enable this option). We are going to be using the auto-discovery feature we saw before. We
+would be helped by this feature and would save time configuring the service.
+You are now presented with the permissions screen and you should click the Allow selected
+permissions button to proceed. This is to allow API management to go and look for services in
+our container platform.
+17
+You will now see the auto-discovered Fuse service appear in the Namespace field. Click the blue
+Create Service button and proceed in starting the service configuration.
+You will be redirected to the Dashboard view where a success message should appear as shown
+in the following screenshot.
+Once the service is created you will see that in the dropdown menu where you can also see
+Audience.
+We can now proceed on changing the details of the configuration of the API and publish the
+update on the Developer Portal so that the public Developers can sign up for the open financial
+API.
+18
+API-> Integration-> Configuration
+This is where you configure the rest of the details of the mapped and protected Service. The
+private base URL should already be filled with the details coming from the auto-discovery
+feature.
+We have the section where we map the Backend API (or in this case Integration service) and
+then 2 URLs where we expose the managed API on the staging first and production gateways
+or infrastructure. We will be changing the Staging and Public addresses of the gateway. In this
+case we are not going to use separate staging or public infrastructure so it can be the same
+address (please notice the format of the staging and public base url for the gateways
+19
+https://userX.amp.apps.openbanking-fe8e.openshiftworkshop.com)
+We will now make sure we map a single endpoint or resource in 3scale and disallow any other
+endpoint (i.e. the other endpoints have not been implemented yet so we are protecting them
+from being exposed).
+The endpoint you want to map is /open-data/banks$ (notice the $ at the end of the path that
+will allow us to make sure users cannot improperly access any other sub-resource). We can now
+check and change the configuration of authentication settings.
+We see that we have already api key protection enabled, but we might want to pass this
+information as HTTP Header instead of HTTP parameter. We will also change the header name
+to ‘key’
+20
+You can also customize the error returned to the end user. Policies
+These are like additional plugin that you can configure to adapt the service to your own
+preference. Add Policy
+21
+Several policies are available and the list is always increasing. Two policies / functionalities are
+of importance: SOAP policy to map SOAP services and advanced rate limit functionalities with
+edge limiting policy. Update the API test GET request field with the same pattern you are
+mapping above (excluding the $).
+Hitting the big blue button will allow you to do two things at once:
+- Update the service configuration on the platform
+- Test the configuration just uploaded to the gateway.
+The second one will fail since we are not providing any valid key, so we will get unauthorized
+request but the gateway will receive the updated configuration in any case.
+We will now fix the test request error as advised by the warning message.
+Let’s switch to explaining the role of API contracts of Application Plans.
+22
+Now from the Service overview page click the green link Create application plan. Since we are
+creating a Service we will need to offer a way for Developers to subscribe to it and use it.
+Application plan are the way to do that (also known as API Contracts).
+Fill out the Name and System Name fields on the create application plan form and click the
+blue button to submit the form.
+You can safely ignore for now the monetization options and use whichever name you prefer.
+23
+We see that we have 1 API contract (or Application Plan), but no application associated to it.
+The application plans are in hidden state by default, so let’s publish this one so that it is usable
+and visible on the Developer portal. Let’s open the application plan.
+Main elements:
+- Monetization settings (trial, setup, cost per month)
+- Endpoint mapped (in this case generic Hits) and relative monetization and rate limiting
+settings
+Don’t modify anything beside filling Name and System name.
+24
+We can now switch to the Audience tab to create an Application to test the Configuration, by
+clicking on Listing.
+From here we can see how we can, as Provider, approve or deny Developers’ Accounts
+registrations. Let’s click on the default Developer Account
+We can see that the Developer has the default application associated, but it’s subscribed to the
+25
+default Service. We can also see the Developer user details.
+Let’s click on Applications in the top level navigation and Create application
+Here we can now subscribe the application to the Application plan we created on our new
+Service from the drop down field available. Let’s fill in the rest of the fields with some basic
+details and click the big blue button: Create Application.
+We now have an assigned key so we can go back to the Configuration window of the API service
+and make a successful test call. API -> Integration -> edit Apicast configuration
+26
+We now have a pre-populated key in the example curl statement, let’s try again testing the
+deployed configuration.
+As we can see we turned the testing into a success.
+Let’s switch to the developers’ point of view by accessing the Developer portal. You can access
+it by selecting in to the top menu in Audience -> Developer portal -> Visit Developer Portal
+The sidebar allows us to edit pages of the Developer Portal live, but we are not interested in it
+now so we can close it.
+Let’s sign in with the default user credentials provided in the sidebar. This is the default
+developer user, created for the default developer account [john / 123456]
+27
+We are now logged in the developer’s dashboard. Let’s see the Applications I have created
+I can now use the credential that I have associated with the application and test the protected
+service. Let’s move to the online API testing tool, https://apitester.com/
+28
+Use the URL for your API gateway, the following format should be configured in your service
+already: https://userX.amp.apps.openbanking-fe8e.openshiftworkshop.com , remember the the
+key Header and the associated value.
+As we can see we succeed with 200 OK!
+Let’s now just test with a wrong key or path then to confirm the role of API Management.
+29
+As expected we receive a Forbidden error.
+Checkpoint
+Break
+Practical Part 2
+RH SSO and 3SCALE OIDC
+Let’s now improve the security of the managed integration service with OIDC. API key is not
+really considered a safe method anymore and is vulnerable to many attacks.
+After introducing content around OAuth and OIDC, let’s see the main elements of RH SSO
+itself.
+SINCE AS INTEGR8LY USERS YOU DON’T HAVE ACCESS TO THE RELATED RH SSO REALM,
+YOU ARE GOING TO SEE HOW TO CONFIGURE A RH SSO CLIENT THAT WILL THEN BE USED
+BY EVERYBODY IN THEIR 3SCALE OIDC CONFIGURATION.
+DEMO ONLY
+Let’s start with RH SSO main dashboard
+ http://sso.apps.openbanking-fe8e.openshiftworksho p.com/auth/
+30
+The realms are like separate instances of the platform, dedicated to separating users and
+applications. As we can see we can customize several aspects of the realm like the theme of the
+login page or the the tokens’ default parameters. Endpoints -> OpenID Endpoint Configuration
+This is where we can find the public endpoints of the Realm exposed by RH SSO (we are going
+to be using this later).
+Let’s now take a look at the Clients section.
+31
+Here we can configure the web or mobile applications that will authenticate using RH SSO as an
+IDP (corresponding to applications in 3scale). As we can see there are some default clients
+dedicated to authentication in the integr8ly environment.
+Users -> View all users
+Here we can see all the end users that are stored inside RH SSO, making it act as an IDM as
+well. These are the end users of the applications created in the Clients section and they will be
+able to authenticate through them. Let’s open one of these users’ details.
+32
+We can see here the type of information stored along with basic user details. The user profile
+can be customized with additional attributes as well.
+We will take advantage of one of the features available in OIDC and not in OAUTH which is
+dynamic client registration.
+Normally to make sure an API web application authenticates with RH SSO, we would need to
+manually create the application on both platforms. With this feature, we let 3scale sync the
+applications to RH SSO, as well as obviously authenticating our API calls. Let’s create a special
+type of such Client in RH SSO under Threescale realm. Clients -> Create
+Let’s call it sync-app and configure the other details required to let it communicate with 3scale.
+33
+We are going to give it only the rights to create applications on behalf of 3scale (service
+accounts enabled only).
+Save -> Service account roles
+Add manage-clients to the assigned roles in this window, by picking realm-management in the
+Client roles menu, this special role allows it to create application on behalf of API management.
+Then click add selected
+34
+And now we are ready to use the client credentials inside 3scale OIDC configuration section.
+To authenticate as we were an end user, we will need to create one test user, so let’s go to the
+Users section and add a user
+We will fill in all the user details and switch to user email verified
+Now we will set the password, by going to credentials and setting it to password and reset
+35
+password.
+We have now all the elements to proceed with the corresponding configuration on API
+management to authenticate calls using our RH SSO.
+LAB BEGINS
+Let’s now switch back to 3scale to configure the API management side of OIDC authentication.
+We can see that we have a fully configured API with API key as the Authentication method. We
+are going to change it to the more secure OpenID Connect, to ensure our financial data are
+protected from attacks performed when a key is compromised. Edit integration settings
+36
+We are going to change it to OpenID Connect. Update service
+Clearly the platform is warning us that we have customers using this API and it might break
+their application, changing the authentication method. In a real world case, we would inform the
+developer in advance by using the messaging and notification functionality available within the
+platform.
+37
+We have now changed the authentication method, we are just left with configuring the correct
+IdP inside 3scale to make sure it is authenticating the requests with RH SSO. edit apicast
+configuration
+As we see we have a dedicated field for this purpose now: OpenID Connect Issuer
+Let’s build a url of this format to use it:
+38
+http://client-id:client-secret@<idp-public-endpoint>
+where client-id: sync-app
+client secret: 5f8f3908-dc47-4b24-a9aa-44f6860e1144
+idp-public-endpoint:
+sso.apps.openbanking-fe8e.openshiftworkshop.com/auth/realms/threescale
+Lastly, change the Credentials location to As HTTP Headers
+And update the staging environment and promote the configuration to production by clicking
+the blue button Promote to production.
+Let’s now switch user perspective and get in the shoes of the developer and open their
+Applications section.
+39
+We can see the secret of their application is absent as is the redirect URL. We are going to
+generate the first and add as redirect url the following https://openidconnect.net/callback (we
+are going to explain why in a moment).
+Let’s make sure that the application is now aligned in terms of credentials both in 3scale and
+RH SSO.
+40
+41
+All looks good! Let’s now try to authenticate the end user, using OpenID Connect.
+We are going to need a special web client, a little bit more intelligent than just the API tester:
+https://openidconnect.net/
+Let’s configure it with the correct parameters from the previous steps. Configuration
+Let’s change the server template to custom and input in the discovery URL the one we opened
+before in our RH SSO realm
+ http://sso.apps.openbanking-fe8e.openshiftworksho p.com/ auth/realms/threescale/.wellknown/openid-configuration
+And click on USE DISCOVERY DOCUMENT
+We are going to use the client id and secret as from the application created in the 3scale
+developer portal / 3scale admin portal or RH SSO since they are all the same.
+And lastly as scope we are going to add openid and email. SAVE
+42
+Start the authentication flow by hitting start. You are going to be redirected to the RH SSO
+login interface where you can use the default user details and password we saw before (john /
+password). Once you login you will receive a temporary code to be exchanged for the final
+credentials or access token.
+43
+Hit Exchange
+44
+You will receive the “access_token” which is an expiring credential that we will be using to
+authenticate with 3scale to get access to the configured API using OpenID Connect. We can
+see that another important piece of information is shown there regarding when this credential
+will expire “expires_in”.
+We can hit NEXT and id_token will also be shown, which contains more user related details.
+45
+We can decode the information on the website JWT.io and found our user details once again as
+passed to the Backend service.
+Let’s now go back to https://openidconnect.net/ website and copy the “access_token” value in
+the step 2 (the long string).
+46
+It should look something like this:
+eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRa1RJX2VwS2IwNVpFSkp3ZTd1cnFQUWtjSERNRi1SMnhGcE1tZUJ2aC1VIn0.eyJqdGkiOiIyYzJmZjQ5ZS01MDY4LTQ0
+MjQtYTRiNS05MWU3OTk3MTM0YTMiLCJleHAiOjE1NDczOTc1NTIsIm5iZiI6MCwiaWF0IjoxNTQ3Mzk2NjUyLCJpc3MiOiJodHRwczovL3NlY3VyZS1zc28tc3NvLmFwcHMub3Bl
+bi1iYW5raW5nLm9wZW50cnkubWUvYXV0aC9yZWFsbXMvb3BlbnNoaWZ0IiwiYXVkIjoiNWJjOTRmNmEiLCJzdWIiOiIyMzZjZDRhMy01MGM2LTQ3YjQtYWUzZC05ODdiYjA1ZT
+k4MzYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiI1YmM5NGY2YSIsImF1dGhfdGltZSI6MTU0NzM5NTg3Niwic2Vzc2lvbl9zdGF0ZSI6ImZhMTQ5YjhiLWQ0ZTktNDliZS05NWIwLTk2
+MTNmZjBhNTViZCIsImFjciI6IjAiLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2Vzcy
+I6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ
+ldmFsczk4QGV4YW1wbGUuY29tIiwiZW1haWwiOiJldmFsczk4QGV4YW1wbGUuY29tIn0.O7y6GDFq5CajAT0DkywEuQqEuD5H7_YMqrVC4AMPthZm_xZ_DAPBEqj3mmzp1o1JOo0_4pMxNgKpyyqCQiFY79GRS5lJE6aVrZK53rQkud5dIaZAE1-ryiD8CtP_MrQtsTS7bVKbaFyCXNyFfxy3cTER8GnGG90OlYPXpy5M954sIcp4CWXxA7ZwVEuQNRRs5w2G2TCjrFyQjCzslNFwDRtADjbMiY7kq1cwRB5qM9ipdEEIigDnH8dietiOZgY24sK10vtowjz_CHuWr5W3474dAZVF
+C7utwStl_bNcoj1gENRcz5cP7fH7Nim8e4itWoSVPRVYcfDHyYb9zixQ
+We are going to use this as a Header in our call towards the OpenID protected service.
+Let’s go back to our api tester and add this as an Authorization header. The format is
+Authorization Bearer <access_token_value_here>
+Let’s hit Test
+47
+And success!
+The work done by the API management behind the curtain is quite impressive:
+● Check for the validity of the access token credentials (not expired, legit and associated
+to the correct application)
+● Check for rate limits on the application triggering the call
+● Apply monetization rules to the call
+● Apply any additional policy that might modify the call in real time
+● Report the traffic back to the analytics component
+Checkpoint
+Improved security to the highest grade possible while using standards.
+48
+OpenShift (optional)
+LAB BEGINS
+As user you will login into openshift and it already looks evident that the end user has been
+profiled as developer on OpenShift as he has access only to Objects and Projects he created.
+If we click on the fuse project we will be able to access to the Fuse Online installation dedicated
+to the user. We would also be able to see any integration project running alongside Fuse
+installation.
+If we switch to the Cluster console, this will give us some Operations details on the project
+created or assigned to our user.
+This type of console is also used by Operations administrators to check the health of OpenShift.
+We can see the RBAC in action if we click on Home -> Status
+49
+The Project default is excluded from the scope of any evals users, since it can contain system
+components and privileged objects.
+We can just switch to the Fuse project to see if there anything wrong with it in the cluster.
+We will now try as bad intentioned user to change some parameters around the installed
+products.
+50
+51
+As we can see we tried to kill one of the running components of our integration platform with
+no success, because of the roles assigned to my user.
+DEMO ONLY
+Let’s see the magic introduced by OpenShift and login as administrator of the platform once
+again.
+We now have full access to all the platforms from all users. We will open as admin one of the
+Fuse projects and open one of the components of Fuse Online.
+52
+We are going to test the auto healing capabilities of the platform by killing one if its running
+components, in particular the one providing the UI service.
+53
+As you can see we just deleted a Pod and we will verify that UI is broken by accessing the
+interface of Fuse Online
+54
+As we can see the component auto-healed thanks to OpenShift features and in a few seconds
+we have a GUI running once again for the integration platform.
+55
+Q&A
+Common issues
+● openidconnect.net client might have an additional space in the redirect_uri field. That’s
+a client bug, you can fix it by adding an additional redirect URIs in RH SSO with a space
+preceding the URL: “ https://openidconnect.net/callback”
+● The installation of RH SSO might have some certificate issues, so might need to use
+instead a RH SSO deployed somewhere else or using the HTTP only route as suggested
+in the tutorial
+● The database is deployed on ElephantSQL on a free tier, which allows only so many
+concurrent connections. You might receive a limit reached if too many users are trying
+the Open Data Bank API at the same time
+56

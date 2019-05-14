@@ -11,7 +11,7 @@ master
 ansible_user=ec2-user
 
 [master]
-master.akeating.openshiftworkshop.com
+master1.openbanking-768f.openshiftworkshop.com
 
 [workshop]
 localhost ansible_connection=local
@@ -28,9 +28,9 @@ shared_project=shared
 namespace=threescale
 backend_project=international
 configure_only=false
-ocp_domain=dayinlife.openshiftworkshop.com
-ocp_apps_domain=apps.dayinlife.openshiftworkshop.com
-usersno=50
+ocp_domain=openbanking-768f.openshiftworkshop.com
+ocp_apps_domain=apps.openbanking-768f.openshiftworkshop.com
+usersno=2
 che=false
 fuse=false
 threescale=false
