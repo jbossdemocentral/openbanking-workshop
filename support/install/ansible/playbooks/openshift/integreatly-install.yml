@@ -54,7 +54,7 @@
         threescale_client_id: "3scale-admin"
         namespace: 3scale
         no_threescale_services: "false"
-        wildcard_route_name: apicast-wildcard-router-route
+        wildcard_route_name: apicast-wildcard-router
       tags: threescale
     # - include_role:
     #     name: provision_apicurio
@@ -82,6 +82,7 @@
       vars:
         configmap_name: extra-services
         configmap_namespace: webapp
+        wt_locations: "https://github.com/jbossdemocentral/openbanking-workshop.git?walkthroughsFolder=/docs/labs"
         ocp_apps_domain: "{{ hostvars['SHARED_VARS']['oc_apps_domain'] }}"
       tags: webapp
     - include_role:

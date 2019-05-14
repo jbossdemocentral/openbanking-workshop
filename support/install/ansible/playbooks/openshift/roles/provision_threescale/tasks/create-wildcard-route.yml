@@ -1,7 +1,19 @@
 ---
+- name: Pause deployment
+  shell: oc rollout pause dc/router -n default
+  register: pause_router
+  failed_when: pause_router.stderr != '' and 'is already paused' not in pause_router.stderr
+
 - name: Patch the OpenShift router to allow wildcard routes
   shell: oc set env dc/router ROUTER_ALLOW_WILDCARD_ROUTES=true -n default
   register: patch_openshift_router
+
+- name: Patch the OpenShift router to relax hostname ownership
+  shell: oc set env dc/router ROUTER_DISABLE_NAMESPACE_OWNERSHIP_CHECK=true -n default
+  register: patch_openshift_router
+
+- name: Resume deployment
+  shell: oc rollout resume dc/router -n default
 
 - name: Delete the existing wildcard route if it exists
   shell: oc delete route {{ wildcard_route_name }} -n {{ namespace }}
