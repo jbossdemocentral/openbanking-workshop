@@ -3,12 +3,6 @@
 :testing-url: https://apitester.com/
 :user-password: openshift
 
-[type=walkthroughResource]
-.3scale Admin Console
-****
-* link:{3scale-admin-url}[Console, window="_blank"]
-****
-
 = Lab 02 - Managing API Endpoints
 
 In this lab you will be adding management capabilities to your API to give you control and visibility of it's usage.
@@ -25,6 +19,12 @@ Red Hat provides one the leading API Management tools that provides API manageme
 
 Your username is: `{user-username}` +
 Your password is: `{user-password}`
+
+[type=walkthroughResource]
+.3scale Admin Console
+****
+* link:{3scale-admin-url}[Console, window="_blank"]
+****
 
 [time=5]
 [id='import-api']
