@@ -1,89 +1,140 @@
-= Template Walkthrough
+:3scale-admin-url: https://{user-username}-admin.{openshift-app-host}/p/login
+:3scale-url: https://www.3scale.net/
+:user-password: openshift
 
-// This is a template meant to be used as a starting point for walkthrough development
+= Lab 02 - Managing API Endpoints
+
+In this lab you will be adding management capabilities to your API to give you control and visibility of it's usage.
+
+*Overview*
+
+Upgrading services to APIs allow us to share within other teams or even third party providers some of the organization services. The API Management capabilities enable us to have better control over the way consumers access the APIs.
+
+*Why Red Hat?*
+
+Red Hat provides one the leading API Management tools that provides API management services. The link:{3scale-url}[3scale API Management] solution enables you to quickly and easily protect and manage your APIs.
+
+*Credentials:*
+
+Your username is: `{user-username}` +
+Your password is: `{user-password}`
 
 [time=5]
-== Task
+[id='import-api']
+== Import from Fuse Online
 
-// Add your own task here
-
-=== Step
-
-// Add steps to your task
-
-.
-3scale
-To reach 3scale as a user you can just go back to the main integr8ly tutorial dashboard and
-click on 3scale. You will be presented with the login window and can use you previously used
-user credentials.
-Introducing now 3scale, for the purpose of managing these exposed APIs, securing them and
-tracking their usage. Dashboard
-Everybody when logging in act as an administrator or API provider. The dashboard will show a
-summary of the trends in usage of the platform, in terms of developers signups, usage of APIs
-and message sent and received.
-16
+. Log in to link:{3scale-admin-url}[3scale Admin, window="_blank"] web console using `{user-username}` and password: `{user-password}`.
++
+The dashboard will show a summary of the trends in usage of the platform, in terms of developers signups, usage of APIs and message sent and received.
++
+image::images/lab2-100.png[lab2-100, role="integr8ly-img-responsive"]
++
 Let’s start managing and protecting the API we just created on Fuse Online.
-Click on the green button New API and select Import from OpenShift (click on Authenticate to
-enable this option). We are going to be using the auto-discovery feature we saw before. We
-would be helped by this feature and would save time configuring the service.
-You are now presented with the permissions screen and you should click the Allow selected
-permissions button to proceed. This is to allow API management to go and look for services in
-our container platform.
-17
-You will now see the auto-discovered Fuse service appear in the Namespace field. Click the blue
-Create Service button and proceed in starting the service configuration.
-You will be redirected to the Dashboard view where a success message should appear as shown
-in the following screenshot.
-Once the service is created you will see that in the dropdown menu where you can also see
-Audience.
-We can now proceed on changing the details of the configuration of the API and publish the
-update on the Developer Portal so that the public Developers can sign up for the open financial
-API.
-18
-API-> Integration-> Configuration
-This is where you configure the rest of the details of the mapped and protected Service. The
-private base URL should already be filled with the details coming from the auto-discovery
-feature.
-We have the section where we map the Backend API (or in this case Integration service) and
-then 2 URLs where we expose the managed API on the staging first and production gateways
-or infrastructure. We will be changing the Staging and Public addresses of the gateway. In this
-case we are not going to use separate staging or public infrastructure so it can be the same
-address (please notice the format of the staging and public base url for the gateways
-19
-https://userX.amp.apps.openbanking-fe8e.openshiftworkshop.com)
-We will now make sure we map a single endpoint or resource in 3scale and disallow any other
-endpoint (i.e. the other endpoints have not been implemented yet so we are protecting them
-from being exposed).
-The endpoint you want to map is /open-data/banks$ (notice the $ at the end of the path that
-will allow us to make sure users cannot improperly access any other sub-resource). We can now
-check and change the configuration of authentication settings.
-We see that we have already api key protection enabled, but we might want to pass this
-information as HTTP Header instead of HTTP parameter. We will also change the header name
-to ‘key’
-20
-You can also customize the error returned to the end user. Policies
+. Click on the green button **New API**.
++
+image::images/lab2-101.png[lab2-101, role="integr8ly-img-responsive"]
+. Click on **Authenticate to enable this option**, login with your credentials and click on **Allow selected permissions**.
++
+image::images/lab2-102.png[lab2-102, role="integr8ly-img-responsive"]
+. Select **Import from OpenShift**. It will populate the __Namespace__ and __Name__ fields with the information from the service you created in the previous lab. Click **Create Service** to continue.
++
+image::images/lab2-103.png[lab2-103, role="integr8ly-img-responsive"]
+. You will be redirected to the Dashboard view where a success message should appear as shown.
++
+image::images/lab2-104.png[lab2-104, role="integr8ly-img-responsive"]
+
+NOTE: Once the service is created you will see that in the dropdown menu where you can also see **Audience**.
+
+[time=5]
+[id='configure-api']
+== API Configuration
+
+We can now proceed on changing the details of the configuration of the API and publish the update on the Developer Portal so that the consuming Developers can sign up for the open financial API.
+
+This is where you configure the rest of the details of the mapped and protected Service. The private base URL should already be filled with the details coming from the auto-discovery feature.
+
+. After a few seconds your API should be added to the services list. Type in `BANK` in the search field to filter the list and show our API. Then click in the **INTEGRATE THIS API** link.
++
+image::images/lab2-200.png[lab2-200, role="integr8ly-img-responsive"]
+. We have the section where we map the Backend API (or in this case Integration service) and then 2 URLs where we expose the managed API on the staging first and production gateways or infrastructure. We will be changing the Staging and Public addresses of the gateway. In this case we are not going to use separate staging or public infrastructure so it can be the same address. 
+. Click on the **edit APIcast configuration** link.
++
+image::images/lab2-201.png[lab2-201, role="integr8ly-img-responsive"]
+. Replace the **Staging Public Base URL** and the **Production Public Base URL** with the following value:
++
+  https://open-bank-data-{user-username}.{openshift-app-host}:443
++
+image::images/lab2-201a.png[lab2-201a, role="integr8ly-img-responsive"]
+. We will now make sure we map a single endpoint or resource in 3scale and disallow any other endpoint (i.e. the other endpoints have not been implemented yet so we are protecting them from being exposed). Scroll down the page and click on the **MAPPING RULES** section link.
++
+image::images/lab2-202.png[lab2-202, role="integr8ly-img-responsive"]
+. The endpoint you want to map is `/open-data/banks$` (notice the $ at the end of the path that will allow us to make sure users cannot improperly access any other sub-resource). Click on the green pencil icon to edit the current mapping rule. 
++
+image::images/lab2-203.png[lab2-203, role="integr8ly-img-responsive"]
+. Type in the patter we will be allowing to process in this case is `/open-data/banks$`.
++
+image::images/lab2-204.png[lab2-204, role="integr8ly-img-responsive"]
+. Scroll down a little bit further and expand the **AUTHENTICATION SETTINGS**. 
++
+image::images/lab2-205.png[lab2-205, role="integr8ly-img-responsive"]
+. We see that we have already api key protection enabled, but we might want to pass this information as HTTP Header instead of HTTP parameter. Select **As HTTP Headers** under __Credentials location__ and change the **Auth user key** header name to `key`.
++
+image::images/lab2-206.png[lab2-206, role="integr8ly-img-responsive"]
++
+NOTE: You can also customize the error returned to the end user. 
+
+[time=5]
+[id='api-policies']
+== API Policies
+
 These are like additional plugin that you can configure to adapt the service to your own
-preference. Add Policy
-21
-Several policies are available and the list is always increasing. Two policies / functionalities are
-of importance: SOAP policy to map SOAP services and advanced rate limit functionalities with
-edge limiting policy. Update the API test GET request field with the same pattern you are
-mapping above (excluding the $).
+preference.
+
+. Scroll down the page and click on **POLICIES**.
++
+image::images/lab2-300.png[lab2-300, role="integr8ly-img-responsive"]
+. Click on **Add Policy**.
++
+image::images/lab2-301.png[lab2-301, role="integr8ly-img-responsive"]
+. Review the policies available out of the box with 3scale.
++
+image::images/lab2-302.png[lab2-302, role="integr8ly-img-responsive"]
++
+NOTE: Several policies are available and the list is always increasing. Two policies / functionalities are of importance: SOAP policy to map *SOAP* services and advanced rate limit functionalities with *Edge limiting* policy. 
+. Click **Cancel** to return to close the API policies.
++
+image::images/lab2-302a.png[lab2-302a, role="integr8ly-img-responsive"]
+. Update the **API test GET request** field with the same pattern you are mapping `/open-data/banks` (notice the exclusion of the `$`).
++
+image::images/lab2-303.png[lab2-303, role="integr8ly-img-responsive"]
++
 Hitting the big blue button will allow you to do two things at once:
-- Update the service configuration on the platform
-- Test the configuration just uploaded to the gateway.
-The second one will fail since we are not providing any valid key, so we will get unauthorized
-request but the gateway will receive the updated configuration in any case.
-We will now fix the test request error as advised by the warning message.
++
+ - Update the service configuration on the platform
+ - Test the configuration just uploaded to the gateway.
++
+NOTE: The second one will fail since we are not providing any valid key, so we will get unauthorized request but the gateway will receive the updated configuration in any case. We will now fix the test request error as advised by the warning message.
+
+[time=5]
+[id='api-app-plans']
+== Application Plans
+
 Let’s switch to explaining the role of API contracts of Application Plans.
-22
-Now from the Service overview page click the green link Create application plan. Since we are
-creating a Service we will need to offer a way for Developers to subscribe to it and use it.
-Application plan are the way to do that (also known as API Contracts).
-Fill out the Name and System Name fields on the create application plan form and click the
-blue button to submit the form.
-You can safely ignore for now the monetization options and use whichever name you prefer.
-23
+
+Within the red error message a link is generated **Start with creating an application plan**. Since we are creating a Service we will need to offer a way for Developers to subscribe to it and use it. Application plan are the way to do that (also known as API Contracts).
+
+. Click on the **Start with creating an application plan** link.
++
+image::images/lab2-400.png[lab2-400, role="integr8ly-img-responsive"]
+. Click on **Create Application Plan**
++
+image::images/lab2-401.png[lab2-401, role="integr8ly-img-responsive"]
+. Fill out the **Name** and **System Name** fields on the __Create Application Plan__ form and then click the **Create Application Plan** button to submit the form.
++
+image::images/lab2-402.png[lab2-402, role="integr8ly-img-responsive"]
++
+NOTE: You can safely ignore for now the monetization options.
+
 We see that we have 1 API contract (or Application Plan), but no application associated to it.
 The application plans are in hidden state by default, so let’s publish this one so that it is usable
 and visible on the Developer portal. Let’s open the application plan.
@@ -92,13 +143,13 @@ Main elements:
 - Endpoint mapped (in this case generic Hits) and relative monetization and rate limiting
 settings
 Don’t modify anything beside filling Name and System name.
-24
+
 We can now switch to the Audience tab to create an Application to test the Configuration, by
 clicking on Listing.
 From here we can see how we can, as Provider, approve or deny Developers’ Accounts
 registrations. Let’s click on the default Developer Account
 We can see that the Developer has the default application associated, but it’s subscribed to the
-25
+
 default Service. We can also see the Developer user details.
 Let’s click on Applications in the top level navigation and Create application
 Here we can now subscribe the application to the Application plan we created on our new

@@ -1,37 +1,27 @@
-:apitester-url: https://apitester.com/
+:user-password: openshift
 
 = Lab 01 - Financial Backend Services
 
 This first session will take us to the creation of a simple REST service from a database source.
 
+*Overview*
+
 This is quite a common scenario and one that goes well for quick prototyping service scenarios.
 
-// [type=walkthroughResource,serviceName=fuse]
-// .Fuse Online
-// ****
-// * link:{fuse-url}[Console, window="_blank"]
-// ****
+*Credentials:*
 
-// [type=walkthroughResource,serviceName=openshift]
-// .Red Hat OpenShift
-// ****
-// ****
+Your username is: `{user-username}` +
+Your password is: `{user-password}`
 
-// [type=walkthroughResource]
-// .API Tester
-// ****
-// * link:{apitester-url}[API Tester, window="_blank"]
-// ****
-
-[time=15]
-[id='database-connection']
-== Database connection
-
-[type=taskResource,serviceName=fuse]
+[type=walkthroughResource,serviceName=fuse]
 .Fuse Online
 ****
 * link:{fuse-url}[Console, window="_blank"]
 ****
+
+[time=15]
+[id='database-connection']
+== Database connection
 
 Let’s start by creating the connection to an existing DB part of our existing infrastructure. It is a data store built on PostgreSQL and (for this lab) hosted on OpenShift. You could be running this anywhere else, as long as you have a direct connection to the DB to use.
 
@@ -155,7 +145,7 @@ You can check the progress in building the integration changing through phases. 
 
 image::images/lab1-309.png[lab1-309, role="integr8ly-img-responsive"]
 
- SINCE AUTO DISCOVERY FEATURE IS ACTIVE WE WILL NOT GET AUTOMATICALLY A URL WITH THE INTEGRATION BUILDING PROCESS, BUT API MANAGEMENT WILL BE ABLE TO SEE IT AND EXPOSE IT ANYWAYS
+NOTE: SINCE AUTO DISCOVERY FEATURE IS ACTIVE WE WILL NOT GET AUTOMATICALLY A URL WITH THE INTEGRATION BUILDING PROCESS, BUT API MANAGEMENT WILL BE ABLE TO SEE IT AND EXPOSE IT ANYWAYS
 
 [type=verification]
 ****
