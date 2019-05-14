@@ -1,0 +1,194 @@
+Break
+Practical Part 2
+RH SSO and 3SCALE OIDC
+Let’s now improve the security of the managed integration service with OIDC. API key is not
+really considered a safe method anymore and is vulnerable to many attacks.
+After introducing content around OAuth and OIDC, let’s see the main elements of RH SSO
+itself.
+SINCE AS INTEGR8LY USERS YOU DON’T HAVE ACCESS TO THE RELATED RH SSO REALM,
+YOU ARE GOING TO SEE HOW TO CONFIGURE A RH SSO CLIENT THAT WILL THEN BE USED
+BY EVERYBODY IN THEIR 3SCALE OIDC CONFIGURATION.
+DEMO ONLY
+Let’s start with RH SSO main dashboard
+ http://sso.apps.openbanking-fe8e.openshiftworksho p.com/auth/
+30
+The realms are like separate instances of the platform, dedicated to separating users and
+applications. As we can see we can customize several aspects of the realm like the theme of the
+login page or the the tokens’ default parameters. Endpoints -> OpenID Endpoint Configuration
+This is where we can find the public endpoints of the Realm exposed by RH SSO (we are going
+to be using this later).
+Let’s now take a look at the Clients section.
+31
+Here we can configure the web or mobile applications that will authenticate using RH SSO as an
+IDP (corresponding to applications in 3scale). As we can see there are some default clients
+dedicated to authentication in the integr8ly environment.
+Users -> View all users
+Here we can see all the end users that are stored inside RH SSO, making it act as an IDM as
+well. These are the end users of the applications created in the Clients section and they will be
+able to authenticate through them. Let’s open one of these users’ details.
+32
+We can see here the type of information stored along with basic user details. The user profile
+can be customized with additional attributes as well.
+We will take advantage of one of the features available in OIDC and not in OAUTH which is
+dynamic client registration.
+Normally to make sure an API web application authenticates with RH SSO, we would need to
+manually create the application on both platforms. With this feature, we let 3scale sync the
+applications to RH SSO, as well as obviously authenticating our API calls. Let’s create a special
+type of such Client in RH SSO under Threescale realm. Clients -> Create
+Let’s call it sync-app and configure the other details required to let it communicate with 3scale.
+33
+We are going to give it only the rights to create applications on behalf of 3scale (service
+accounts enabled only).
+Save -> Service account roles
+Add manage-clients to the assigned roles in this window, by picking realm-management in the
+Client roles menu, this special role allows it to create application on behalf of API management.
+Then click add selected
+34
+And now we are ready to use the client credentials inside 3scale OIDC configuration section.
+To authenticate as we were an end user, we will need to create one test user, so let’s go to the
+Users section and add a user
+We will fill in all the user details and switch to user email verified
+Now we will set the password, by going to credentials and setting it to password and reset
+35
+password.
+We have now all the elements to proceed with the corresponding configuration on API
+management to authenticate calls using our RH SSO.
+LAB BEGINS
+Let’s now switch back to 3scale to configure the API management side of OIDC authentication.
+We can see that we have a fully configured API with API key as the Authentication method. We
+are going to change it to the more secure OpenID Connect, to ensure our financial data are
+protected from attacks performed when a key is compromised. Edit integration settings
+36
+We are going to change it to OpenID Connect. Update service
+Clearly the platform is warning us that we have customers using this API and it might break
+their application, changing the authentication method. In a real world case, we would inform the
+developer in advance by using the messaging and notification functionality available within the
+platform.
+37
+We have now changed the authentication method, we are just left with configuring the correct
+IdP inside 3scale to make sure it is authenticating the requests with RH SSO. edit apicast
+configuration
+As we see we have a dedicated field for this purpose now: OpenID Connect Issuer
+Let’s build a url of this format to use it:
+38
+http://client-id:client-secret@<idp-public-endpoint>
+where client-id: sync-app
+client secret: 5f8f3908-dc47-4b24-a9aa-44f6860e1144
+idp-public-endpoint:
+sso.apps.openbanking-fe8e.openshiftworkshop.com/auth/realms/threescale
+Lastly, change the Credentials location to As HTTP Headers
+And update the staging environment and promote the configuration to production by clicking
+the blue button Promote to production.
+Let’s now switch user perspective and get in the shoes of the developer and open their
+Applications section.
+39
+We can see the secret of their application is absent as is the redirect URL. We are going to
+generate the first and add as redirect url the following https://openidconnect.net/callback (we
+are going to explain why in a moment).
+Let’s make sure that the application is now aligned in terms of credentials both in 3scale and
+RH SSO.
+40
+41
+All looks good! Let’s now try to authenticate the end user, using OpenID Connect.
+We are going to need a special web client, a little bit more intelligent than just the API tester:
+https://openidconnect.net/
+Let’s configure it with the correct parameters from the previous steps. Configuration
+Let’s change the server template to custom and input in the discovery URL the one we opened
+before in our RH SSO realm
+ http://sso.apps.openbanking-fe8e.openshiftworksho p.com/ auth/realms/threescale/.wellknown/openid-configuration
+And click on USE DISCOVERY DOCUMENT
+We are going to use the client id and secret as from the application created in the 3scale
+developer portal / 3scale admin portal or RH SSO since they are all the same.
+And lastly as scope we are going to add openid and email. SAVE
+42
+Start the authentication flow by hitting start. You are going to be redirected to the RH SSO
+login interface where you can use the default user details and password we saw before (john /
+password). Once you login you will receive a temporary code to be exchanged for the final
+credentials or access token.
+43
+Hit Exchange
+44
+You will receive the “access_token” which is an expiring credential that we will be using to
+authenticate with 3scale to get access to the configured API using OpenID Connect. We can
+see that another important piece of information is shown there regarding when this credential
+will expire “expires_in”.
+We can hit NEXT and id_token will also be shown, which contains more user related details.
+45
+We can decode the information on the website JWT.io and found our user details once again as
+passed to the Backend service.
+Let’s now go back to https://openidconnect.net/ website and copy the “access_token” value in
+the step 2 (the long string).
+46
+It should look something like this:
+eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRa1RJX2VwS2IwNVpFSkp3ZTd1cnFQUWtjSERNRi1SMnhGcE1tZUJ2aC1VIn0.eyJqdGkiOiIyYzJmZjQ5ZS01MDY4LTQ0
+MjQtYTRiNS05MWU3OTk3MTM0YTMiLCJleHAiOjE1NDczOTc1NTIsIm5iZiI6MCwiaWF0IjoxNTQ3Mzk2NjUyLCJpc3MiOiJodHRwczovL3NlY3VyZS1zc28tc3NvLmFwcHMub3Bl
+bi1iYW5raW5nLm9wZW50cnkubWUvYXV0aC9yZWFsbXMvb3BlbnNoaWZ0IiwiYXVkIjoiNWJjOTRmNmEiLCJzdWIiOiIyMzZjZDRhMy01MGM2LTQ3YjQtYWUzZC05ODdiYjA1ZT
+k4MzYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiI1YmM5NGY2YSIsImF1dGhfdGltZSI6MTU0NzM5NTg3Niwic2Vzc2lvbl9zdGF0ZSI6ImZhMTQ5YjhiLWQ0ZTktNDliZS05NWIwLTk2
+MTNmZjBhNTViZCIsImFjciI6IjAiLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2Vzcy
+I6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ
+ldmFsczk4QGV4YW1wbGUuY29tIiwiZW1haWwiOiJldmFsczk4QGV4YW1wbGUuY29tIn0.O7y6GDFq5CajAT0DkywEuQqEuD5H7_YMqrVC4AMPthZm_xZ_DAPBEqj3mmzp1o1JOo0_4pMxNgKpyyqCQiFY79GRS5lJE6aVrZK53rQkud5dIaZAE1-ryiD8CtP_MrQtsTS7bVKbaFyCXNyFfxy3cTER8GnGG90OlYPXpy5M954sIcp4CWXxA7ZwVEuQNRRs5w2G2TCjrFyQjCzslNFwDRtADjbMiY7kq1cwRB5qM9ipdEEIigDnH8dietiOZgY24sK10vtowjz_CHuWr5W3474dAZVF
+C7utwStl_bNcoj1gENRcz5cP7fH7Nim8e4itWoSVPRVYcfDHyYb9zixQ
+We are going to use this as a Header in our call towards the OpenID protected service.
+Let’s go back to our api tester and add this as an Authorization header. The format is
+Authorization Bearer <access_token_value_here>
+Let’s hit Test
+47
+And success!
+The work done by the API management behind the curtain is quite impressive:
+● Check for the validity of the access token credentials (not expired, legit and associated
+to the correct application)
+● Check for rate limits on the application triggering the call
+● Apply monetization rules to the call
+● Apply any additional policy that might modify the call in real time
+● Report the traffic back to the analytics component
+Checkpoint
+Improved security to the highest grade possible while using standards.
+48
+OpenShift (optional)
+LAB BEGINS
+As user you will login into openshift and it already looks evident that the end user has been
+profiled as developer on OpenShift as he has access only to Objects and Projects he created.
+If we click on the fuse project we will be able to access to the Fuse Online installation dedicated
+to the user. We would also be able to see any integration project running alongside Fuse
+installation.
+If we switch to the Cluster console, this will give us some Operations details on the project
+created or assigned to our user.
+This type of console is also used by Operations administrators to check the health of OpenShift.
+We can see the RBAC in action if we click on Home -> Status
+49
+The Project default is excluded from the scope of any evals users, since it can contain system
+components and privileged objects.
+We can just switch to the Fuse project to see if there anything wrong with it in the cluster.
+We will now try as bad intentioned user to change some parameters around the installed
+products.
+50
+51
+As we can see we tried to kill one of the running components of our integration platform with
+no success, because of the roles assigned to my user.
+DEMO ONLY
+Let’s see the magic introduced by OpenShift and login as administrator of the platform once
+again.
+We now have full access to all the platforms from all users. We will open as admin one of the
+Fuse projects and open one of the components of Fuse Online.
+52
+We are going to test the auto healing capabilities of the platform by killing one if its running
+components, in particular the one providing the UI service.
+53
+As you can see we just deleted a Pod and we will verify that UI is broken by accessing the
+interface of Fuse Online
+54
+As we can see the component auto-healed thanks to OpenShift features and in a few seconds
+we have a GUI running once again for the integration platform.
+55
+Q&A
+Common issues
+● openidconnect.net client might have an additional space in the redirect_uri field. That’s
+a client bug, you can fix it by adding an additional redirect URIs in RH SSO with a space
+preceding the URL: “ https://openidconnect.net/callback”
+● The installation of RH SSO might have some certificate issues, so might need to use
+instead a RH SSO deployed somewhere else or using the HTTP only route as suggested
+in the tutorial
+● The database is deployed on ElephantSQL on a free tier, which allows only so many
+concurrent connections. You might receive a limit reached if too many users are trying
+the Open Data Bank API at the same time
+56
