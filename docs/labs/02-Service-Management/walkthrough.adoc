@@ -69,7 +69,10 @@ image::images/lab2-200.png[lab2-200, role="integr8ly-img-responsive"]
 image::images/lab2-201.png[lab2-201, role="integr8ly-img-responsive"]
 . Replace the **Staging Public Base URL** and the **Production Public Base URL** with the following value:
 +
+[source,bash,subs="attributes"]
+----
   https://open-bank-data-{user-username}.{openshift-app-host}:443
+----
 +
 image::images/lab2-201a.png[lab2-201a, role="integr8ly-img-responsive"]
 . We will now make sure we map a single endpoint or resource in 3scale and disallow any other endpoint (i.e. the other endpoints have not been implemented yet so we are protecting them from being exposed). Scroll down the page and click on the **MAPPING RULES** section link.
@@ -236,7 +239,10 @@ Let’s move to the online to continue testing.
 . Open the link:{testing-url}[API testing tool, window="_blank"] in a new tab.
 . Fill in the **URL** endpoint with the **Staging Public Base URL**  you configured in your 3scale service plus the open banking operation path we implemented. Then click on **Test**
 +
+[source,bash,subs="attributes"]
+----
   https://open-bank-data-{user-username}.{openshift-app-host}/open-data/banks
+----
 +
 image::images/lab2-700.png[lab2-700, role="integr8ly-img-responsive"]
 . You got a `HTTP/1.1 403 Forbidden` error code as a result. This is because you didn't send the __Authentication parameters__ that identify the testing application.
