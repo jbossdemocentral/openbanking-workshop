@@ -1,0 +1,288 @@
+:3scale-admin-url: https://{user-username}-admin.{openshift-app-host}/p/login
+:3scale-url: https://www.3scale.net/
+:sso-url:  https://sso-sso.{openshift-app-host}/auth/admin/{user-username}/console
+:testing-url: https://apitester.com/
+:openidconnect-url: https://openidconnect.net/
+:user-password: openshift
+
+[id='api-security']
+= Lab 3 - API Security
+
+In this lab you will discover how to set up the widely used OpenID connect pattern for Authentication.
+ 
+*Overview*
+
+Once you have APIs in your organization and have applications being written, you also want to be sure in many cases that the various types of users of the APIs are correctly authenticated. In this lab you will discover how to set up the widely used OpenID connect pattern for Authentication.
+
+*Why Red Hat?*
+
+The Red Hat SSO product provides important functionality for managing identities at scale. In this lab you will see how it fits together with 3scale and OpenShift.
+
+*Credentials:*
+
+Your username is: `{user-username}` +
+Your password is: `{user-password}`
+
+[type=walkthroughResource]
+.Red Hat SSO Console
+****
+* link:{sso-url}[Console, window="_blank"]
+****
+
+[type=walkthroughResource]
+.3scale Admin Console
+****
+* link:{3scale-admin-url}[Console, window="_blank"]
+****
+
+[time=3]
+[id="sso-sign-on"]
+== Sign-in to Red Hat SSO
+
+. Log in to link:{sso-url}[SSO Admin, window="_blank"] web console using `{user-username}` and password: `{user-password}`. Click on *Log in*.
++
+image::images/00-login-sso.png[00-login-sso.png, role="integr8ly-img-responsive"]
+
+. Select *Clients* from the left menu.
++
+image::images/00-clients.png[00-clients.png, role="integr8ly-img-responsive"]
++
+NOTE: A _3scale-admin_ client and service account was already created for you.
+
+. Click on the *3scale-admin* link to view the details.
++
+image::images/00-3scale-admin.png[00-3scale-admin.png, role="integr8ly-img-responsive"]
+
+. Click the *Credentials* tab.
++
+image::images/00-sa-credentials.png[00-sa-credentials.png, role="integr8ly-img-responsive"]
+
+. Take notice of the service account *Secret*. Copy and save it or write it down as you will use it to configure 3scale.
++
+image::images/00-sa-secret.png[00-sa-secret.png, role="integr8ly-img-responsive"]
+
+[time=3]
+[id="add-user-realm"]
+== Add User to Realm
+
+. Click on the *Users* menu on the left side of the screen.
++
+image::images/00-users.png[00-users.png, role="integr8ly-img-responsive"]
+
+. Click the *Add user* button.
++
+image::images/00-add-user.png[00-add-user.png, role="integr8ly-img-responsive"]
+
+. Type `apiuser` as the **Username**.
++
+image::images/00-username.png[00-username.png, role="integr8ly-img-responsive"]
+
+. Click on the *Save* button.
+. Click on the *Credentials* tab to reset the password. Type `apipassword` as the **New Password** and **Password Confirmation**. Turn OFF the **Temporary** to avoid the password reset at the next login.
++
+image::images/00-user-credentials.png[00-user-credentials.png, role="integr8ly-img-responsive"]
+
+. Click on **Reset Password**.
+. Click on the **Change password** button in the pop-up dialog.
++
+image::images/00-change-password.png[00-change-password.png, role="integr8ly-img-responsive"]
++
+NOTE: Now you have a user to test your integration.
+
+[time=4]
+[id="configure-3scale-integration]
+== Configure 3scale Integration
+
+. If not already done, log in to link:{3scale-admin-url}[3scale Admin, window="_blank"] web console using `{user-username}` and password: `{user-password}`.
++
+image::images/01-login.png[01-login.png, role="integr8ly-img-responsive"]
+
+. The first page you will land is the _API Management Dashboard_. Click on the **I-OPEN-BANK-DATA API** to expand the API dashboard.
++
+image::images/01a-dashboard.png[01a-dashboard.png, role="integr8ly-img-responsive"]
+
+. Scroll down the page and click on the **INTEGRATION** menu link.
++
+image::images/02-api-integration.png[02-api-integration.png, role="integr8ly-img-responsive"]
+
+. Click on the **edit integration settings** to edit the API settings for the gateway.
++
+image::images/03-edit-settings.png[03-edit-settings.png, role="integr8ly-img-responsive"]
+
+. Scroll down the page, under the _Authentication_ options, select **OpenID Connect**.
++
+image::images/04-authentication.png[04-authentication.png, role="integr8ly-img-responsive"]
+
+. Click on the **Update Service** button.
+
+. Accept the warning message about changing the Authentication mode by clicking *OK*.
++
+image::images/04b-authentication-warning.png[04b-authentication-warning.png, role="integr8ly-img-responsive"]
+
+. Back in the service integration page, click on the **edit APIcast configuration**.
++
+image::images/05-edit-apicast.png[05-edit-apicast.png, role="integr8ly-img-responsive"]
+
+. Scroll down the page and expand the authentication options by clicking the **Authentication Settings** link.
++
+image::images/05-authentication-settings.png[05-authentication-settings.png, role="integr8ly-img-responsive"]
+
+. In the **OpenID Connect Issuer** field, type in your previously noted client credentials with the URL of your Red Hat Single Sing On instance: 
++
+[source,bash,subs="attributes"]
+----
+https://3scale-admin:CLIENT_SECRET@sso-sso.{openshift-app-host}/auth/realms/{user-username}
+----
++
+IMPORTANT: Replace `CLIENT_SECRET` in the above URL with the secret copied from previous task (`3scale-admin` client secret)
++
+image::images/06-openid-issuer.png[06-openid-issuer.png, role="integr8ly-img-responsive"]
+
+. Scroll down the page and click on the **Update Staging Environment** button.
++
+image::images/08-back-integration.png[08-back-integration.png, role="integr8ly-img-responsive"]
+
+. After the reload, scroll down again and click the **Back to Integration & Configuration** link.
++
+image::images/07-update-environment.png[07-update-environment.png, role="integr8ly-img-responsive"]
+
+. Promote to Production by clicking the **Promote to Production** button.
++
+image::images/08a-promote-production.png[08a-promote-production.png, role="integr8ly-img-responsive"]
+
+[time=3]
+[id="retrieve-credentials]
+== Application Credentials
+
+Let's get the new credentials for the testing app. 
+
+. Click on **Applications** on the left side menu.
++
+image::images/09-applications.png[09-applications.png, role="integr8ly-img-responsive"]
+
+. Click on the **Open Bank App**.
++
+image::images/10-open-bank-app.png[10-open-bank-app.png, role="integr8ly-img-responsive"]
+
+. The application now has a __Client ID__ and a __Client Secret__ field. Click on **Add Random Key** to generate a secret for this application. Then, click on **Edit** to add the __Redirect URL__.
++
+image::images/11-random-key.png[11-random-key.png, role="integr8ly-img-responsive"]
+
+. Fill in the **Redirect URL** with the following value: 
++
+----
+https://openidconnect.net/callback
+----
++
+image::images/12-callback.png[12-callback.png, role="integr8ly-img-responsive"]
+
+. Copy the values of the **API Credentials** section, as you will use them in the next step.
++
+image::images/13-app-credentials.png[13-app-credentials.png, role="integr8ly-img-responsive"]
+
+
+[time=3]
+[id="test-flow]
+== Testing
+[type=taskResource]
+.API Testing
+****
+* link:{testing-url}[API testing tool, window="_blank"]
+****
+[type=taskResource]
+.OpenID Connect
+****
+* link:{openidconnect-url}[OpenID Connect playground, window="_blank"]
+****
+
+Let’s move to the online to continue testing.
+
+. On a new tab open the link:{openidconnect-url}[OpenID Connect playground, window="_blank"]
+. Let's configure the playground with the correct parameters from previous steps. Click on **CONFIGURATION**.
++
+image::images/lab3-400.png[lab3-400.png, role="integr8ly-img-responsive"]
+
+. Change the **Server Template** to `Custom` and fill in the **Discovery Document URL** with the following URL:
++
+[source,bash,subs="attributes"]
+----
+https://sso-sso.{openshift-app-host}/auth/realms/{user-username}/.well-known/openid-configuration
+----
++
+image::images/lab3-401.png[lab3-401.png, role="integr8ly-img-responsive"]
+
+. To fill up the rest of the endpoints, click on **USE DISCOVERY DOCUMENT**.
+. Fill in the information from the __API Credentials__ you wrote down in the previous step. You will need to update the **OIDC Client ID** and the **OIDC Client Secret**.
++
+image::images/lab3-402.png[lab3-402.png, role="integr8ly-img-responsive"]
+
+. Click **SAVE** to finish the configuration.
+. Scroll down the page and star the authentication flow by clicking **START**.
++
+image::images/lab3-403.png[lab3-403.png, role="integr8ly-img-responsive"]
+
+. The __Red Hat Single Sign On__ login screen will appear. Log in with the user and password you created in the previous step. 
++
+----
+Username: apiuser
+Password: apipassword
+----
++
+image::images/lab3-404.png[lab3-404.png, role="integr8ly-img-responsive"]
+
+. You will receive an __Exchange Code__ that you need now to exchange for an __Access Token__. Scroll down the page and click on **EXCHANGE**.
++
+image::images/lab3-405.png[lab3-405.png, role="integr8ly-img-responsive"]
++
+NOTE: The __Exchange Token__ has a short lifespan. Hit **Exchange** soon or you will need to start the flow again to replace the expired token.
+
+. You will get a __json__ response with the __Access Token__ information. Scroll down and click **NEXT**.
++
+image::images/lab3-406.png[lab3-406.png, role="integr8ly-img-responsive"]
+
+. This is your __Access Token__ which is a expiring credential that we will be using to authenticate with 3scale and get access to the API configured with OpenID Connect authentication. Decode the token information by clicking on **VIEW ON JWT.IO** 
++
+image::images/lab3-407.png[lab3-407.png, role="integr8ly-img-responsive"]
+
+. Scroll down the page and check the actual payload data encoded in the token.
++
+image::images/lab3-408.png[lab3-408.png, role="integr8ly-img-responsive"]
++
+NOTE: 3scale uses this payload information to check the identity of the API consumer.
+
+. Copy the token on the left side of the page, you will use it in the following steps.
++
+image::images/lab3-409.png[lab3-409.png, role="integr8ly-img-responsive"]
++
+NOTE: Your token should look like this:
++
+----
+eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwazdKcDZhY0JzQzNYeEF0RDVudU5mbWZ1Wi1sTjN5UXpoT0k0bFliMklVIn0.eyJqdGkiOiJhYTI4YjdlMS05N2VlLTRkNGItOWU5Ni02Y2RmZjQwNWRlMzciLCJleHAiOjE1NTc5NTAyMTcsIm5iZiI6MCwiaWF0IjoxNTU3OTQ5OTE3LCJpc3MiOiJodHRwczovL3Nzby1zc28uYXBwcy5vcGVuYmFua2luZy03NjhmLm9wZW5zaGlmdHdvcmtzaG9wLmNvbS9hdXRoL3JlYWxtcy91c2VyMSIsImF1ZCI6IjFlNzNkMjY2Iiwic3ViIjoiNmNlNjcyZDctODU4ZC00NGRiLWEyODAtODZhM2Y3OWFjMzQ4IiwidHlwIjoiSUQiLCJhenAiOiIxZTczZDI2NiIsImF1dGhfdGltZSI6MTU1Nzk0OTA4Nywic2Vzc2lvbl9zdGF0ZSI6IjQyMThhYmRjLTgwMTctNDg2ZS04Yzg2LWQwNmRlNjExOTk5YyIsImFjciI6IjAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhcGl1c2VyIn0.lYXa0VrxwD5FTut7j4vIqLWIo2i3tzoDbsQWNeiqPEnZqw6gdbPS0yD0MQfjc3dJAr4TCUeGYHowvWjftIwbvAStDHxvW4WgF7HjpVs_-pnxkrSUkD3yQKwQmwE0QceTi-GQMmUeok6aHPjHpq5Gy3qjmyFeQVZFJzQECPpi1uguyYQCA9DKmN-Lh7JRq7_NooGdVsEMTOYc3aTjIznV-MALtpjlkvgLUsV9lmQMo0rGzp3EUlkLmdmwB2bhHpG0IX7UniRXg-KFHJJwHoS-FUAghE53Q-3weEcliCmDaGTZOH4MhgWquY548Xs7H3-SLfUdQo2hdA8irMVdm3j4Lw
+----
+
+. We are going to use now this token as an __Authentication Header__ in our call to the OpenID Connect protected service. Go back to the link:{testing-url}[API testing tool, window="_blank"] and edit the URL and  the headers.
++
+[source,bash,subs="attributes"]
+----
+  URL: https://open-bank-data-{user-username}.{openshift-app-host}/open-data/banks
+  Header Name: Authorization
+  Header Value: Bearer {lt} your_access_token {gt}
+----
++
+NOTE: Replace `< your_access_token >` with the actual token you retrieved earlier.
++
+image::images/lab3-410.png[lab3-410.png, role="integr8ly-img-responsive"]
+
+. Finally hit **Test**.
++
+image::images/lab3-411.png[lab3-411.png, role="integr8ly-img-responsive"]
+
+NOTE: Congratulations! You have now created an application to test your OpenID Connect Integration.
+
+[type=verification]
+****
+Is your result similar to the image?
+****
+
+[type=verificationFail]
+Verify that you followed each step in the procedure above.  If you are still having issues, contact your session facilitator.

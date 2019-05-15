@@ -37,15 +37,19 @@ The dashboard will show a summary of the trends in usage of the platform, in ter
 image::images/lab2-100.png[lab2-100, role="integr8ly-img-responsive"]
 +
 Let’s start managing and protecting the API we just created on Fuse Online.
+
 . Click on the green button **New API**.
 +
 image::images/lab2-101.png[lab2-101, role="integr8ly-img-responsive"]
+
 . Click on **Authenticate to enable this option**, login with your credentials and click on **Allow selected permissions**.
 +
 image::images/lab2-102.png[lab2-102, role="integr8ly-img-responsive"]
+
 . Select **Import from OpenShift**. It will populate the __Namespace__ and __Name__ fields with the information from the service you created in the previous lab. Click **Create Service** to continue.
 +
 image::images/lab2-103.png[lab2-103, role="integr8ly-img-responsive"]
+
 . You will be redirected to the Dashboard view where a success message should appear as shown.
 +
 image::images/lab2-104.png[lab2-104, role="integr8ly-img-responsive"]
@@ -63,10 +67,12 @@ This is where you configure the rest of the details of the mapped and protected 
 . After a few seconds your API should be added to the services list. Type in `BANK` in the search field to filter the list and show our API. Then click in the **INTEGRATE THIS API** link.
 +
 image::images/lab2-200.png[lab2-200, role="integr8ly-img-responsive"]
+
 . We have the section where we map the Backend API (or in this case Integration service) and then 2 URLs where we expose the managed API on the staging first and production gateways or infrastructure. We will be changing the Staging and Public addresses of the gateway. In this case we are not going to use separate staging or public infrastructure so it can be the same address. 
 . Click on the **edit APIcast configuration** link.
 +
 image::images/lab2-201.png[lab2-201, role="integr8ly-img-responsive"]
+
 . Replace the **Staging Public Base URL** and the **Production Public Base URL** with the following value:
 +
 [source,bash,subs="attributes"]
@@ -75,18 +81,23 @@ image::images/lab2-201.png[lab2-201, role="integr8ly-img-responsive"]
 ----
 +
 image::images/lab2-201a.png[lab2-201a, role="integr8ly-img-responsive"]
+
 . We will now make sure we map a single endpoint or resource in 3scale and disallow any other endpoint (i.e. the other endpoints have not been implemented yet so we are protecting them from being exposed). Scroll down the page and click on the **MAPPING RULES** section link.
 +
 image::images/lab2-202.png[lab2-202, role="integr8ly-img-responsive"]
+
 . The endpoint you want to map is `/open-data/banks$` (notice the $ at the end of the path that will allow us to make sure users cannot improperly access any other sub-resource). Click on the green pencil icon to edit the current mapping rule. 
 +
 image::images/lab2-203.png[lab2-203, role="integr8ly-img-responsive"]
+
 . Type in the patter we will be allowing to process in this case is `/open-data/banks$`.
 +
 image::images/lab2-204.png[lab2-204, role="integr8ly-img-responsive"]
+
 . Scroll down a little bit further and expand the **AUTHENTICATION SETTINGS**. 
 +
 image::images/lab2-205.png[lab2-205, role="integr8ly-img-responsive"]
+
 . We see that we have already api key protection enabled, but we might want to pass this information as HTTP Header instead of HTTP parameter. Select **As HTTP Headers** under __Credentials location__ and change the **Auth user key** header name to `key`.
 +
 image::images/lab2-206.png[lab2-206, role="integr8ly-img-responsive"]
@@ -103,17 +114,21 @@ preference.
 . Scroll down the page and click on **POLICIES**.
 +
 image::images/lab2-300.png[lab2-300, role="integr8ly-img-responsive"]
+
 . Click on **Add Policy**.
 +
 image::images/lab2-301.png[lab2-301, role="integr8ly-img-responsive"]
+
 . Review the policies available out of the box with 3scale.
 +
 image::images/lab2-302.png[lab2-302, role="integr8ly-img-responsive"]
 +
 NOTE: Several policies are available and the list is always increasing. Two policies / functionalities are of importance: SOAP policy to map *SOAP* services and advanced rate limit functionalities with *Edge limiting* policy. 
+
 . Click **Cancel** to return to close the API policies.
 +
 image::images/lab2-302a.png[lab2-302a, role="integr8ly-img-responsive"]
+
 . Update the **API test GET request** field with the same pattern you are mapping `/open-data/banks` (notice the exclusion of the `$`).
 +
 image::images/lab2-303.png[lab2-303, role="integr8ly-img-responsive"]
@@ -136,27 +151,34 @@ Within the red error message a link is generated **Start with creating an applic
 . Click on the **Start with creating an application plan** link.
 +
 image::images/lab2-400.png[lab2-400, role="integr8ly-img-responsive"]
+
 . Click on **Create Application Plan**
 +
 image::images/lab2-401.png[lab2-401, role="integr8ly-img-responsive"]
+
 . Fill out the **Name** and **System Name** fields on the __Create Application Plan__ form and then click the **Create Application Plan** button to submit the form.
 +
 image::images/lab2-402.png[lab2-402, role="integr8ly-img-responsive"]
 +
 NOTE: You can safely ignore for now the monetization options.
+
 . See that there is 1 API contract (or Application Plan), but no application associated to it. The application plans are in hidden state by default. Publish this one so that it is usable
 and visible on the Developer portal by clicking on the **Publish** link.
 +
 image::images/lab2-403.png[lab2-403, role="integr8ly-img-responsive"]
+
 . Let’s open the application plan to inspect the main elements. Click on the application plan's name link.
 +
 image::images/lab2-404.png[lab2-404, role="integr8ly-img-responsive"]
+
 . Check the **Monetization** settings (trial, setup, cost per month)
 +
 image::images/lab2-405.png[lab2-405, role="integr8ly-img-responsive"]
+
 . Scroll down the page to check the mapped **Metrics, Methods, Limits & Pricing Rules** (in this case generic Hits) and relative monetization and rate limiting settings.
 +
 image::images/lab2-406.png[lab2-406, role="integr8ly-img-responsive"]
+
 . Switch to the __Audience__ tab to create an Application to test the Configuration, by clicking **API:i-open-bank-data** and then **Audience** on the top dropdown menu.
 +
 image::images/lab2-407.png[lab2-407, role="integr8ly-img-responsive"]
@@ -170,27 +192,34 @@ From this page we can see how we can, as an API Provider, approve or deny Develo
 . Click on the default Developer Account
 +
 image::images/lab2-500.png[lab2-500, role="integr8ly-img-responsive"]
+
 . See the Developer user details. Click on the **Application** link in the top level navigation.
 +
 image::images/lab2-501.png[lab2-501, role="integr8ly-img-responsive"]
+
 . See that the Developer has the default application associated, but it’s subscribed to the default _API_ Service. Add a new application by clicking in the **Create Application** link.
 +
 image::images/lab2-502.png[lab2-502, role="integr8ly-img-responsive"]
+
 . Here we can now subscribe the application to the Application plan we created on our new Service. Select the correct **Application Plan** from the drop down field available. 
 +
 image::images/lab2-503.png[lab2-503, role="integr8ly-img-responsive"]
 Fill in the rest of the fields with some basic details and click the big blue button **Create Application**.
 +
 image::images/lab2-504.png[lab2-504, role="integr8ly-img-responsive"]
+
 . Now we have a valid **User Key** API credential so we can go back to the Configuration window of the API service and make a successful test call. Click on **Integration** and then on **Configuration** in the left side menu.
 +
 image::images/lab2-505.png[lab2-505, role="integr8ly-img-responsive"]
+
 . Click on **edit Apicast configuration**.
 +
 image::images/lab2-506.png[lab2-506, role="integr8ly-img-responsive"]
+
 . Scroll all the way down. See there is now a pre-populated key in the example curl statement, try again testing the deployed configuration by clicking on **Update & test in Staging Environment**.
 +
 image::images/lab2-507.png[lab2-507, role="integr8ly-img-responsive"]
+
 . See we turned the testing into a success.
 +
 image::images/lab2-508.png[lab2-508, role="integr8ly-img-responsive"]
@@ -204,6 +233,7 @@ Let’s switch to the developers’ point of view by accessing the __Developer P
 . Switch to the __Audience__ tab, by clicking **API:i-open-bank-data** and then **Audience** on the top dropdown menu.
 +
 image::images/lab2-407.png[lab2-407, role="integr8ly-img-responsive"]
+
 . Click on **Developer Portal** to expand the left menu and then click **Visit Portal**.
 +
 image::images/lab2-600.png[lab2-600, role="integr8ly-img-responsive"]
@@ -212,15 +242,19 @@ NOTE: The sidebar allows us to edit pages of the Developer Portal live, but we a
 . Close the right sidebar menu by clicking the small **X** icon on the top right side.
 +
 image::images/lab2-601.png[lab2-601, role="integr8ly-img-responsive"]
+
 . Click on the top right **SIGN IN** link. 
 +
 image::images/lab2-602.png[lab2-602, role="integr8ly-img-responsive"]
+
 . Login with the default user credentials provided in the sidebar. This is the default developer user, created for the default developer account username: `john` and password: `123456`.
 +
 image::images/lab2-603.png[lab2-603, role="integr8ly-img-responsive"]
+
 . Let’s see the Applications created. Click in the **See your Applications & their credentials** button.
 +
 image::images/lab2-604.png[lab2-604, role="integr8ly-img-responsive"]
+
 . We are now in the developer’s application dashboard. Copy the **credentials** associated with the application.
 +
 image::images/lab2-605.png[lab2-605, role="integr8ly-img-responsive"]
@@ -245,12 +279,15 @@ Let’s move to the online to continue testing.
 ----
 +
 image::images/lab2-700.png[lab2-700, role="integr8ly-img-responsive"]
+
 . You got a `HTTP/1.1 403 Forbidden` error code as a result. This is because you didn't send the __Authentication parameters__ that identify the testing application.
 +
 image::images/lab2-701.png[lab2-701, role="integr8ly-img-responsive"]
+
 . Scroll up the page and add the __User Key__ to the request headers by clicking on **Add Request Header**. Add the `key` header and the provided user key you copied from the Developer portal. Then, click **Test** again.
 +
 image::images/lab2-702.png[lab2-702, role="integr8ly-img-responsive"]
+
 . As we can see we succeed with `HTTP/1.1 200 OK`!
 +
 image::images/lab2-703.png[lab2-703, role="integr8ly-img-responsive"]
