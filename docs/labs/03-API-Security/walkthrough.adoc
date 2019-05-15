@@ -223,6 +223,7 @@ image::images/lab3-403.png[lab3-403.png, role="integr8ly-img-responsive"]
 
 . The __Red Hat Single Sign On__ login screen will appear. Log in with the user and password you created in the previous step. 
 +
+[source,bash,subs="attributes"]
 ----
 Username: apiuser
 Password: apipassword
