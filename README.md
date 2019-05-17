@@ -32,7 +32,7 @@ Everybody needs:
 | 10:40 a.m. |Importance of consistency in an open banking platform |
 | 11:15 a.m. |Measuring the success of open banking |
 | 12:00 p.m. |Lunch |
- 
+
 ### Hands-On Technical Lab
 
 | Time        | Activity           |
@@ -47,9 +47,9 @@ Everybody needs:
 
 * [01. Financial Backend Service](docs/lab01.md#lab-01) - Building Blocks on Fuse Online
 * [02. Service Management](docs/lab02.md#lab-02) - Configuration and Integration in 3scale
-* [03. Developer Portal](docs/lab03.md#lab-03) - Basics of Content Publishing
-* [04. API Authentication](docs/lab04.md#lab-04) - OpenID Connect with Red Hat Single Sign On and 3scale
-* [05. Container Management](docs/lab05.md#lab-05) - OpenShift 10,000 Feet View
+* [03. API Security](docs/lab04.md#lab-04) - OpenID Connect with Red Hat Single Sign On and 3scale
+* [04. Developer Portal](docs/lab03.md#lab-03) - Basics of Content Publishing (Coming Soon)
+* [05. Container Management](docs/lab05.md#lab-05) - OpenShift 10,000 Feet View (Coming Soon)
 
 ### Slides
 
@@ -59,7 +59,7 @@ Check the latest [Slides](slideslink) for delivering this workshop.
 
 ### Installation
 
-If you feel comfortable, you can setup your own environment to host the software required in the labs. Follow the [install instructions](docs/install.md#installation) to install and configure the environment.
+If you feel comfortable, you can setup your own environment to host the software required in the labs. Follow the [install instructions](docs/install.md#open-banking-workshop-installation) to install and configure the environment.
 
 ### FAQ
 
@@ -69,7 +69,7 @@ Having any trouble while doing the labs? Check this [troubleshooting](docs/troub
 
 GitHub Repo: [https://github.com/jbossdemocentral/openbanking-workshop](https://github.com/jbossdemocentral/openbanking-workshop)
 
-Feel free to ask [Luca Ferrari](mailto:lferrari@redhat.com) or [Hugo Guerrero](mailto:hguerrero@redhat.com) if you need some support when there are any questions left or if you need some support.
+Feel free to ask [Hugo Guerrero](mailto:hguerrero@redhat.com) if you need some support when there are any questions left or if you need some support.
 
 ### Contributing
 
