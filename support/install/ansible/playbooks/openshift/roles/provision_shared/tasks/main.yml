@@ -8,7 +8,7 @@
   failed_when: false
   until: postgresql_replicas.stdout | int > 0
   retries: 60
-  delay: 5
+  delay: 30
   register: postgresql_replicas
 
 - name: Wait for postgresql readiness
@@ -16,11 +16,11 @@
   until: postgresql_available_replicas.stdout == postgresql_replicas.stdout
   ignore_errors: yes
   retries: 60
-  delay: 5
+  delay: 30
   register: postgresql_available_replicas
 
 - name: Load data into db
-  shell: "oc exec `oc get pod -o jsonpath='{.items[0].metadata.name}' -n {{ shared_project }}` -- /bin/bash -c 'curl https://raw.githubusercontent.com/jbossdemocentral/openbanking-workshop/master/support/templates/banks.sql -s  | psql sampledb --username dbuser'"
+  shell: oc exec `oc get pods -o jsonpath='{.items[?(@.metadata.labels.deploymentconfig=="postgresql")].metadata.name}' -n {{ shared_project }}` -- /bin/bash -c 'curl https://raw.githubusercontent.com/jbossdemocentral/openbanking-workshop/master/support/templates/banks.sql -s  | psql sampledb --username dbuser'
   register: output
 
 - debug: var=output

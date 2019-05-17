@@ -11,7 +11,7 @@ master
 ansible_user=ec2-user
 
 [master]
-master1.openbanking-768f.openshiftworkshop.com
+master1.GUID.internal
 
 [workshop]
 localhost ansible_connection=local
