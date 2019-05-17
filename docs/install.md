@@ -87,3 +87,11 @@ The recommended way to install the workshop is running the ansible playbook from
     ```
 
 It will a take a couple of minutes to install the Open Banking environment.
+
+When installation is over, you can point the attendants to the Solution Explorer web page where they can start working on the walkthroughs
+
+```bash
+https://tutorial-web-app-webapp.apps.GUID.openshiftworkshop.com/
+```
+
+Don't forget to replace *GUID* with your environment value.
