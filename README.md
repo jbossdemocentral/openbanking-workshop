@@ -53,7 +53,7 @@ Everybody needs:
 
 ### Slides
 
-Check the latest [Slides](slideslink) for delivering this workshop.
+Check the latest [Slides](https://docs.google.com/presentation/d/1_MGNF6bF8iUXIur7RfsdpC_0jaAV_VukV7OPUf4kde8/edit?usp=sharing) for delivering this workshop.
 
 ## Support
 
