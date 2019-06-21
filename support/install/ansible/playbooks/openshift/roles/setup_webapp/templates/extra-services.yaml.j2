@@ -5,9 +5,7 @@ data:
       "services": [
         { "name": "3scale Developer Portal", "url": "https://{{ '{{' }} username {{ '}}' }}.{{ ocp_apps_domain }}" },
         { "name": "3scale Admin Console", "url": "https://{{ '{{' }} username {{ '}}' }}-admin.{{ ocp_apps_domain }}" },
-        { "name": "Red Hat Single Sign On", "url": "https://sso-sso.{{ ocp_apps_domain }}/auth/admin/{{ '{{' }} username {{ '}}' }}/console" },
-        { "name": "Microcks", "url": "http://microcks.{{ ocp_apps_domain }}" },
-        { "name": "Apicurio", "url": "http://apicurio-studio.{{ ocp_apps_domain }}" }
+        { "name": "Red Hat Single Sign On", "url": "https://sso-sso.{{ ocp_apps_domain }}/auth/admin/{{ '{{' }} username {{ '}}' }}/console" }
       ]
     }
 kind: ConfigMap
